@@ -174,7 +174,7 @@
                            @endphp
                            <select class="form-control" name="role" id="role">
                               <option value="">Select Role</option>
-                              <option value="customer" {{$role=='endUser' ? 'selected' : ''}}>Customer</option>
+                              <option value="customer" {{$role=='customer' ? 'selected' : ''}}>Customer</option>
                               <option value="vendor" {{$role=='vendor' ? 'selected' : ''}}>Vendor</option>
                               <option value="employee" {{$role=='employee' ? 'selected' : ''}}>Employee</option>
                            </select>

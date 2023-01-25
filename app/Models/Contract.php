@@ -16,9 +16,14 @@ class Contract extends Model
         'payment_obj'
     ];
     
-    public function user()
+    public function customer()
     {
-        return $this->belongsTo('App\Models\User','user_id');
+        return $this->belongsTo('App\Models\User','customer_id');
+    }
+    
+    public function vendor()
+    {
+        return $this->belongsTo('App\Models\User','vendor_id');
     }
 
     public function order_items()
@@ -30,12 +35,6 @@ class Contract extends Model
     public function user_address()
     {
         return $this->belongsTo('App\Models\Address','user_address_id');
-    }
-
-    // relation to user payment method
-    public function user_pm()
-    {
-        return $this->belongsTo('App\Models\PaymentMethod','user_pm_id');
     }
 
     //status

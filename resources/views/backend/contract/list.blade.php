@@ -1,7 +1,11 @@
 @extends('backend.layouts.app')
 
 @section('styles')
-
+<style>
+    th{
+        font-weight: 700 !important;
+    }
+</style>
 @endsection
 
 @section('content')
@@ -52,10 +56,15 @@
                                     <table class="table table-hover">
                                         <thead>
 											<tr>
-												<th>#</th>
-											   <th>Name</th>
-											   <th>Email</th>
-											   <th>Role</th>
+												<th class="bold">#</th>
+                                                <th>Type</th>
+											   <th>Vendor</th>
+											   <th>Purchaser</th>
+											   <th>Start date</th>
+											   <th>End date</th>
+											   <th>Renewal date</th>
+											   <th>Renewal Deadline date</th>
+											   <th>Contract value</th>
 											   {{-- <th>Active</th> --}}
 											   @if (auth()->user()->hasRole('superadmin') ||auth()->user()->hasAnyPermission(['edit-data', 'delete-data', 'add-data']))
 											   <th>Operation</th>
@@ -66,18 +75,15 @@
 											@foreach($contracts as $key => $contract)
 												<tr>
 													<td>{{++$key}}</td>
-													<td class="name-badge p-3">{{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}
-			
-													</td>
-													<td>{{ $user->email ?? '' }}</td>
-													<td>
-														@foreach ($user->roles as $role)
-															{{ ucfirst($role->name ?? '') }}
-															<br>
-														@endforeach
-													</td>
-													
-													<td>
+													<td class="name-badge p-3">{{ $contract->user_type ?? '' }}</td>
+													<td>{{ $contract->vendor->name ?? '' }}</td>
+													<td>{{ $contract->customer->name ?? '' }}</td>
+													<td>{{ $contract->start_date ?? '' }}</td>
+													<td>{{ $contract->end_date ?? '' }}</td>
+													<td>{{ $contract->renewal_date ?? '' }}</td>
+													<td>{{ $contract->renewal_deadline_date ?? '' }}</td>
+													<td>{{ $contract->contract_value ?? '' }}</td>
+													<td class="d-flex">
                                                         {{-- <div class="dropdown dropdown-inline">
                                                             <button type="button" class="btn btn-default btn-icon btn-sm btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                 <i class="flaticon-more"></i>
@@ -90,10 +96,10 @@
                                                         </div> --}}
                                                         
                                                         @include('backend.components.delete',[
-                                                            'data' => $user->id, 
-                                                            'route' =>route('backend.contract.destroy',$user->id), 
+                                                            'data' => $contract->id, 
+                                                            'route' =>route('backend.contract.destroy',$contract->id), 
                                                         ])
-                                                        <a href="{{route('backend.contract.edit',$user->id)}}" class="btn btn-success btn-tone">
+                                                        <a href="{{route('backend.contract.edit',$contract->id)}}" class="btn btn-success btn-tone ml-2 d-flex">
                                                             <i class="fas fa-edit "></i>
                                                             <span class="m-{{$alignShortRev}}-5">Edit</span>
                                                         </a>

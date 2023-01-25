@@ -32,7 +32,7 @@ class UserController extends Controller
         });
 
         $roles=(clone $users)->get();
-        $users=$users->paginate(2);
+        $users=$users->paginate(10);
 
         return view('backend.user.list',compact('roles','users'));
     }

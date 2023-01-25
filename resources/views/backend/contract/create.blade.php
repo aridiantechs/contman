@@ -4,7 +4,7 @@
 @section('styles')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 <link href="{{asset('backend/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" integrity="sha512-gxWow8Mo6q6pLa1XH/CcH8JyiSDEtiwJV78E+D+QP0EVasFs8wKXq16G8CLD4CJ2SnonHr4Lm/yY2fSI2+cbmw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
 <style>
 
     .select2-container {
@@ -168,7 +168,72 @@
         }
     }
  
+    .selector{
+        position:relative;
+        width:34%;
+        background-color:var(--smoke-white);
+        display:flex;
+        justify-content:space-around;
+        align-items:center;
+        border-radius:9999px;
+        border: 2px solid #f2f2f2;
+    }
+    .selecotr-item{
+        position:relative;
+        flex-basis: calc(100% / 2);
+        height:100%;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+    .selector-item_radio{
+        appearance:none;
+        display:none;
+    }
+    .selector-item_label{
+        position:relative;
+        height:80%;
+        width:100%;
+        text-align:center;
+        border-radius:9999px;
+        line-height:400%;
+        font-weight:900;
+        transition-duration:.5s;
+        transition-property:transform, color, box-shadow;
+        transform:none;
+        margin-bottom: 0;
+    }
+    .selector-item_radio:checked + .selector-item_label{
+        background-color:#e31c79;
+        color:var(--white);
+        /* box-shadow:0 0 4px rgba(0,0,0,.5),0 2px 4px rgba(0,0,0,.5); */
+        transform:translateY(-2px);
+    }
 
+    @media (max-width:480px) {
+        .selector{
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+
+    .bootstrap-tagsinput{
+        width: 100%;
+        padding: 8px 6px;
+    }
+
+    .bootstrap-tagsinput .tag {
+        margin-right: 2px;
+        color: white;
+        background: #e31c79;
+        padding: 2px;
+        border-radius: 6px;
+    }
+
+    .invalid-feedback{
+        display: block !important;
+    }
 </style>
 @endsection
 
@@ -189,7 +254,7 @@
                 <h4 class="card-title font-size-18">Add a Contract</h4>
             </div>
             <div class="card-body">
-                @include('backend.partials.errors')
+                {{-- @include('backend.partials.errors') --}}
                 @php 
                   $route = route('backend.contract.store');
                   if(isset($contract)){
@@ -202,13 +267,31 @@
                         @method('PUT')
                     @endisset
                     <div class="form-row">
-                        
+                        <div class="col-md-12 mb-2">
+                            <div class="container">
+                                <div class="selector mx-auto">
+                                    <div class="selecotr-item">
+                                        <input type="radio" id="customer" name="user_type" value="customer" class="selector-item_radio" {{isset($contract) ?($contract->user_type=='customer'? 'checked': '') : 'checked'}}>
+                                        <label for="customer" class="selector-item_label">Customer</label>
+                                    </div>
+                                    <div class="selecotr-item">
+                                        <input type="radio" id="vendor" name="user_type" value="vendor" class="selector-item_radio" {{isset($contract) && $contract->user_type=='vendor'? 'checked': ''}}>
+                                        <label for="vendor" class="selector-item_label">Vendor</label>
+                                    </div>
+                                    @error('user_type')
+                                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group col-md-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="card-title">Upload your file here ( max 10mb)</div>
                                     <div class="file-upload">
-                                        <input class="file-input" type="file" name="file[]" accept=".pdf" id="attachment" multiple>
+                                        <input class="file-input" type="file" name="contract_file[]" accept=".pdf" id="attachment" multiple>
                                         <img src="{{asset('backend/assets/images/file-upload.png')}}" alt="">
                                         <div class="card-subtitle mt-2">Drag n Drop your file here</div>                   
                                     </div>
@@ -218,68 +301,295 @@
                                             <span id="files-names"></span>
                                         </span>
                                     </p>
+        
+                                    @error('contract_file')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
-        
-                            @error('logo')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
                    
                     <div class="form-row">
                         <div class="form-group col-md-4">
-                           <label>Role</label>
-                           @php
-                              $role = isset($user) && $user->roles()->exists() ? $user->roles()->first()->name :'';
-                           @endphp
-                           <select class="form-control" name="role" id="role">
-                              <option value="">Select Role</option>
-                              <option value="customer" {{$role=='endUser' ? 'selected' : ''}}>Customer</option>
-                              <option value="vendor" {{$role=='vendor' ? 'selected' : ''}}>Vendor</option>
-                              <option value="employee" {{$role=='employee' ? 'selected' : ''}}>Employee</option>
-                           </select>
+                            <label class="font-weight-semibold">Customer</label>
+                            @php
+                              $cust = isset($contract) ? $contract->customer :old('customer');
+                            @endphp
+                            <select class="form-control" name="customer">
+                                <option value="">Select Customer</option>
+                                @foreach ($customers as $customer)
+                                    <option value="{{$customer->id ?? ''}}" {{$cust==$customer->id ? 'selected' : ''}}>{{$customer->name ?? ''}}</option>
+                                @endforeach
+                            </select>
+                            @error('customer')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div class="form-group col-md-4">
-                            <label class="font-weight-semibold" for="userName">First Name:</label>
-                            <input type="text" class="form-control" name="first_name" placeholder="First Name" value="{{isset($user) ? $user->first_name : ''}}">
+                            @php
+                                $vendor = isset($contract) ? $contract->vendor :old('vendor');
+                            @endphp
+                            <label class="font-weight-semibold">Vendor</label>
+                            <select class="form-control" name="vendor">
+                                <option value="">Select Vendor</option>
+                                @foreach ($vendors as $vend)
+                                    <option value="{{$vend->id ?? ''}}" {{$vendor==$vend->id ? 'selected' : ''}}>{{$vend->name ?? ''}}</option>
+                                @endforeach
+                            </select>
+                            @error('vendor')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
+                        {{-- <div class="form-group col-md-4">
+                            <label class="font-weight-semibold">Salesperson</label>
+                            <select class="form-control" name="customer">
+                                <option value="">Select Salesperson</option>
+                                @foreach ($salesperson as $salep)
+                                    <option value="{{$salep->id ?? ''}}">{{$salep->name ?? ''}}</option>
+                                @endforeach
+                            </select>
+                        </div> --}}
                         <div class="form-group col-md-4">
-                            <label class="font-weight-semibold" for="userName">Last Name:</label>
-                            <input type="text" class="form-control" name="last_name" placeholder="Last Name" value="{{isset($user) ? $user->last_name : ''}}">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label class="font-weight-semibold" for="email">Email:</label>
-                            <input type="email" class="form-control" name="email" id="email" placeholder="email" value="{{isset($user) ? $user->email : ''}}">
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label class="font-weight-semibold">Birthday</label>
+                            <label class="font-weight-semibold">Start Date</label>
                             <div class="input-affix m-b-10">
                                 <i class="prefix-icon anticon anticon-calendar"></i>
-                                <input type="text" class="form-control datepicker-input" value="{{isset($user) ? $user->date_of_birth : ''}}" name="date_of_birth" placeholder="Pick a date">
+                                <input type="date" class="form-control datepicker-input" name="start_date" placeholder="Start date" value="{{isset($contract) ? $contract->start_date : old('start_date')}}">
                             </div>
+                            @error('start_date')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
-
                         <div class="form-group col-md-4">
-                           <label class="font-weight-semibold" for="email">Password:</label>
-                           <input type="password" class="form-control" name="password" placeholder="Password">
+                            <label class="font-weight-semibold">End Date</label>
+                            <div class="input-affix m-b-10">
+                                <i class="prefix-icon anticon anticon-calendar"></i>
+                                <input type="date" class="form-control datepicker-input" name="end_date" placeholder="End date" value="{{isset($contract) ? $contract->end_date : old('end_date')}}">
+                            </div>
+                            @error('end_date')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
-                        @php
-                           $display=isset($user) && $user->hasRole('employee') ? 'block' : 'none';
-                        //    dd($user->getAllPermissions()->pluck('name')->toArray());
-                        @endphp
-                        <div id="permissions" style="display: {{$display}}" class="form-group col-md-12">
+                        
+                        <div class="form-group col-md-4">
+                            <label class="font-weight-semibold">Date Renewal</label>
+                            <div class="input-affix m-b-10">
+                                <i class="prefix-icon anticon anticon-calendar"></i>
+                                <input type="date" class="form-control datepicker-input" name="renewal_date" placeholder="Renewal date" value="{{isset($contract) ? $contract->renewal_date : old('renewal_date')}}">
+                            </div>
+                            @error('renewal_date')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
+                        <div class="form-group col-md-4">
+                            <label class="font-weight-semibold">Renewal Reminder</label>
+                            <div class="input-affix m-b-10">
+                                <i class="prefix-icon anticon anticon-calendar"></i>
+                                <input type="date" class="form-control datepicker-input" name="renewal_deadline_date" placeholder="Renewal Deadline date" value="{{isset($contract) ? $contract->renewal_deadline_date : old('renewal_deadline_date')}}">
+                            </div>
+                            @error('renewal_deadline_date')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-12">
                            
-                           <label class="font-weight-semibold">Permissions:</label>
-                           <select class="form-control" name="permissions[]" multiple="multiple" id="permission_select">
-
-                           </select>
+                            <label class="font-weight-semibold">Estimated value of contract (annually):</label>
+                            <input type="number" class="form-control" name="contract_value" value="{{isset($contract) ? $contract->contract_value : old('contract_value')}}">
+                            @error('contract_value')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4 cust__frag">
+                            @php
+                                $contract_type = isset($contract) ? $contract->contract_type :old('contract_type');
+                            @endphp
+                            <label class="font-weight-semibold">Contract Type</label>
+                            <select class="form-control" name="contract_type">
+                                <option value="">Select type</option>
+                                <option value="normal" {{$contract_type=="normal" ? 'selected' : ''}}>Normal</option>
+                                <option value="company" {{$contract_type=="company" ? 'selected' : ''}}>Company</option>
+                            </select>
+                            @error('contract_type')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4 cust__frag">
+                            @php
+                                $extension = isset($contract) ? $contract->extension :old('extension');
+                            @endphp
+                            <label class="font-weight-semibold">Extension</label>
+                            <select class="form-control" name="extension">
+                                <option value="">Select type</option>
+                                <option value="automatic" {{$extension=="automatic" ? 'selected' : ''}}>Automatic</option>
+                            </select>
+                            @error('extension')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4 cust__frag">
+                            @php
+                                $extension_period = isset($contract) ? $contract->extension_period :old('extension_period');
+                            @endphp
+                            <label class="font-weight-semibold">Extension Period</label>
+                            <select class="form-control" name="extension_period">
+                                <option value="">Select type</option>
+                                <option value="12-months" {{$extension_period=="12-months" ? 'selected' : ''}}>12 months</option>
+                            </select>
+                            @error('extension_period')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-row cust__frag">
+                        <div class="form-group col-md-12">
+                            <h4 class="font-weight-semibold">Performance/ KPI</h4>
+                        </div>
+                        <div class="form-group col-md-4">
+                           
+                            <label class="font-weight-semibold">Delivery degree:</label>
+                            <input type="text" class="form-control" name="performance_delivery_degree" value="{{isset($contract) ? $contract->performance_delivery_degree : old('performance_delivery_degree')}}">
+                            @error('performance_delivery_degree')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
+                           
+                            <label class="font-weight-semibold">Delivery time:</label>
+                            <input type="text" class="form-control" name="performance_delivery_time" value="{{isset($contract) ? $contract->performance_delivery_time : old('performance_delivery_time')}}">
+                            @error('performance_delivery_time')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
+                           
+                            <label class="font-weight-semibold">Quality:</label>
+                            <input type="text" class="form-control" name="performance_quality" value="{{isset($contract) ? $contract->performance_quality : old('performance_quality')}}">
+                            @error('performance_quality')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-row cust__frag">
+                        <div class="form-group col-md-12">
+                            <h4 class="font-weight-semibold">Fines elements</h4>
+                        </div>
+                        <div class="form-group col-md-4">
+                           
+                            <label class="font-weight-semibold">Delivery degree:</label>
+                            <input type="text" class="form-control" name="element_delivery_degree" value="{{isset($contract) ? $contract->element_delivery_degree : old('element_delivery_degree')}}">
+                            @error('element_delivery_degree')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
+                           
+                            <label class="font-weight-semibold">Delivery time:</label>
+                            <input type="text" class="form-control" name="element_delivery_time" value="{{isset($contract) ? $contract->element_delivery_time : old('element_delivery_time')}}">
+                            @error('element_delivery_time')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
+                           
+                            <label class="font-weight-semibold">Quality:</label>
+                            <input type="text" class="form-control" name="element_quality" value="{{isset($contract) ? $contract->element_quality : old('element_quality')}}">
+                            @error('element_quality')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-row cust__frag">
+                        <div class="form-group col-md-4">
+                            <label class="font-weight-semibold">Delivery Instructions / guidelines :</label>
+                            <input type="text" class="form-control" name="delivery_instructions" data-role="tagsinput" value="{{isset($contract) ? $contract->delivery_instructions : old('delivery_instructions')}}">
+                            @error('delivery_instructions')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
+                            @php
+                                $product_category = isset($contract) ? $contract->product_category :old('product_category');
+                            @endphp
+                            <label class="font-weight-semibold">Product Category</label>
+                            <select class="form-control" name="product_category">
+                                <option value="">Select type</option>
+                                @foreach ($categories as $cat)
+                                    <option value="{{$cat->id ?? ''}}" {{$product_category==$cat->id ? 'selected' : ''}}>{{$cat->category_name ?? ''}}</option>
+                                @endforeach
+                            </select>
+                            @error('product_category')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        
+                        <div class="form-group col-md-12">
+                            <h4 class="font-weight-semibold"><b>Meeting:</b></h4>
+                        </div>
+                        <div class="form-group col-md-4">
+                           
+                            <label class="font-weight-semibold">Status meeting:</label>
+                            <input type="text" class="form-control" name="status_meeting" value="{{isset($contract) ? $contract->status_meeting : old('status_meeting')}}">
+                            @error('status_meeting')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
+                           
+                            <label class="font-weight-semibold">Meeting Date:</label>
+                            <input type="date" class="form-control" name="meeting_date" value="{{isset($contract) ? $contract->meeting_date : old('meeting_date')}}">
+                            @error('meeting_date')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-4">
-                            <button type="button" id="submit-btn" class="btn btn-primary m-t-30">Submit</button>
+                            <button type="submit" class="btn btn-primary m-t-30">Submit</button>
                         </div>
                     </div>
 
@@ -294,12 +604,26 @@
 @section('scripts')
 <!-- Third Party Scripts(used by this page)-->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript">
    
    $(document).ready(function(){
-    
+    // $("[name='delivery_instructions']").tagsinput();
+        @if(isset($contract))
+            $("[name='user_type']").trigger('change');
+        @endif
+
    })
 
+   $("[name='user_type']").on('change', function(){
+    if ($(this).val()=='customer') {
+        $('.cust__frag').show();
+        $('.vend__frag').hide();
+    }else{
+        $('.cust__frag').hide();
+        $('.vend__frag').show();
+    }
+   })
 </script>
 
 <script>

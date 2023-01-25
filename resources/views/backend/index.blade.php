@@ -54,7 +54,7 @@
                                     <p class="m-b-0 text-muted">Vendors</p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <i class="fas fa-building stats-icon"></i>
-                                        <h2 class="m-b-0 stats-val">{{$data['total_companies'] ?? ''}}</h2>
+                                        <h2 class="m-b-0 stats-val">{{$data['vendors'] ?? ''}}</h2>
                                     </div>
                                     
                                 </div>
@@ -82,7 +82,7 @@
                                     <p class="m-b-0 text-muted">Customers</p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <i class="fas fa-regular fa-users stats-icon"></i>
-                                        <h2 class="m-b-0 stats-val">{{$data['new_users'] ?? ''}}</h2>
+                                        <h2 class="m-b-0 stats-val">{{$data['customers'] ?? ''}}</h2>
                                     </div>
                                 </div>
                             </div>

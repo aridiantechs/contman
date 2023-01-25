@@ -44,14 +44,14 @@ Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])
 Route::group([
 	'prefix' => 'backend',
     'as' => 'backend.',
-	'middleware' => ['role:superadmin|employee'],
+	'middleware' => ['auth','role:superadmin|employee'],
 ],function(){
 
     // View Permissions
     Route::group([
         'middleware' => ['role_or_permission:superadmin|View Data'],
     ],function(){
-
+        
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('category', [CategoryController::class, 'index'])->name('category.index');

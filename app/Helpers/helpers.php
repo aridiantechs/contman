@@ -15,11 +15,8 @@ use Illuminate\Http\File;
  * Time: 1:30 AM
  */
 
-CONST EVENTS_IMAGE_PATH = 'public/uploads/events';
 CONST USER_IMAGE_PATH = 'public/uploads/users';
-CONST REQUEST_IMAGE_PATH = 'uploads/requests/';
-CONST PROPOSAL_IMAGE_PATH = 'uploads/proposal/';
-CONST PROFILE_IMAGE_PATH = 'uploads/company_profile/';
+CONST CONTRACT_FILE_PATH = 'uploads/contracts/';
 CONST USER_IMAGE_PATH_PUBLIC = 'uploads/users/';
 CONST BANNER_IMAGE_PATH_PUBLIC = 'uploads/banner';
 
