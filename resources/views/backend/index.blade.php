@@ -260,40 +260,28 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Customer</th>
-                                            <th>Service</th>
-                                            <th>Date</th>
-                                            <th>Amount</th>
-                                            <th>Status</th>
+                                            <th class="bold">#</th>
+                                            <th>Type</th>
+                                            <th>User</th>
+                                            <th>Start date</th>
+                                            <th>End date</th>
+                                            <th>Renewal date</th>
+                                            <th>Renewal Deadline date</th>
+                                            <th>Contract value</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($recent_orders as $order)
+                                        @foreach($recent_contracts as $key => $contract)
                                             <tr>
-                                                <td>{{$order->order_id ?? ''}}</td>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="avatar avatar-image" style="height: 30px; min-width: 30px; max-width:30px">
-                                                                <img src="assets/images/avatars/user.jpg" alt="">
-                                                            </div>
-                                                            <h6 class="m-{{$alignShortRev}}-10 m-b-0">{{$order->user->name ?? ''}}</h6>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>{{$order->order_items->service->service_data->category_name ?? ''}}</td>
-                                                <td>{{\Carbon\Carbon::parse($order->created_at ?? '')->format('d M Y')}}</td>
-                                                <td>SR {{$order->total_amount ?? 0}}</td>
-                                                <td>
-                                                    @php
-                                                        $badge=$order->latest_status && $order->latest_status->status=='pending' ? 'warning' : 'success';
-                                                    @endphp
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="badge badge-{{$badge}} badge-dot m-{{$alignShort}}-10"></span>
-                                                        <span>{{$order->latest_status->status ?? ''}}</span>
-                                                    </div>
-                                                </td>
+                                                <td>{{++$key}}</td>
+                                                <td class="name-badge p-3">{{ $contract->user_type ?? '' }}</td>
+                                                <td>{{ $contract->association->name ?? '' }}</td>
+                                                <td>{{ $contract->start_date ?? '' }}</td>
+                                                <td>{{ $contract->end_date ?? '' }}</td>
+                                                <td>{{ $contract->renewal_date ?? '' }}</td>
+                                                <td>{{ $contract->renewal_deadline_date ?? '' }}</td>
+                                                <td>{{ $contract->contract_value ?? '' }}</td>
+                                                
                                             </tr>
                                         @endforeach
                                     </tbody>

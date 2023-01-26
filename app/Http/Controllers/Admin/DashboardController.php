@@ -31,7 +31,7 @@ class DashboardController extends Controller
 		})->count();
 
 		$top_services=OrderItem::has('company')->has('service')->with('service.service_data')->get()->pluck('service')->unique();
-		$recent_orders=Contract::latest()->limit(10)->get();
+		$recent_contracts=Contract::latest()->limit(10)->get();
 		
 		$graph=Contract::select(
             DB::raw('sum(contract_value) as `revenue`'), 
@@ -45,7 +45,7 @@ class DashboardController extends Controller
 			'vendors'=>$vendors,
 		];
 		// dd($data);
-	    return view('backend.index',compact('data','top_services','recent_orders','graph'));
+	    return view('backend.index',compact('data','top_services','recent_contracts','graph'));
   	}
 	  
   	public function terms_and_condition(Request $request) 
