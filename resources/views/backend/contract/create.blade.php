@@ -313,10 +313,10 @@
                     </div>
                    
                     <div class="form-row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-4 cust__frag">
                             <label class="font-weight-semibold">Customer</label>
                             @php
-                              $cust = isset($contract) ? $contract->customer :old('customer');
+                              $cust = isset($contract) ? $contract->user_id :old('customer');
                             @endphp
                             <select class="form-control" name="customer">
                                 <option value="">Select Customer</option>
@@ -330,9 +330,16 @@
                                 </span>
                             @enderror
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-4 cust__frag">
+                            <label class="font-weight-semibold">Salesperson</label>
+                            <select class="form-control" name="salesperson_id">
+                                
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-4 vend__frag" style="display: none">
                             @php
-                                $vendor = isset($contract) ? $contract->vendor :old('vendor');
+                                $vendor = isset($contract) ? $contract->user_id :old('vendor');
                             @endphp
                             <label class="font-weight-semibold">Vendor</label>
                             <select class="form-control" name="vendor">
@@ -347,15 +354,13 @@
                                 </span>
                             @enderror
                         </div>
-                        {{-- <div class="form-group col-md-4">
-                            <label class="font-weight-semibold">Salesperson</label>
-                            <select class="form-control" name="customer">
-                                <option value="">Select Salesperson</option>
-                                @foreach ($salesperson as $salep)
-                                    <option value="{{$salep->id ?? ''}}">{{$salep->name ?? ''}}</option>
-                                @endforeach
+                        <div class="form-group col-md-4 vend__frag" style="display: none">
+                            <label class="font-weight-semibold">Purchaser</label>
+                            <select class="form-control" name="purchaser_id">
+                                
                             </select>
-                        </div> --}}
+                        </div>
+                        
                         <div class="form-group col-md-4">
                             <label class="font-weight-semibold">Start Date</label>
                             <div class="input-affix m-b-10">
@@ -536,15 +541,7 @@
                     </div>
                     <hr>
                     <div class="form-row cust__frag">
-                        <div class="form-group col-md-4">
-                            <label class="font-weight-semibold">Delivery Instructions / guidelines :</label>
-                            <input type="text" class="form-control" name="delivery_instructions" data-role="tagsinput" value="{{isset($contract) ? $contract->delivery_instructions : old('delivery_instructions')}}">
-                            @error('delivery_instructions')
-                                <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
+                        
                         <div class="form-group col-md-4">
                             @php
                                 $product_category = isset($contract) ? $contract->product_category :old('product_category');
@@ -557,6 +554,16 @@
                                 @endforeach
                             </select>
                             @error('product_category')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group col-md-8">
+                            <label class="font-weight-semibold">Delivery Instructions / guidelines :</label>
+                            <input type="text" class="form-control" name="delivery_instructions" data-role="tagsinput" value="{{isset($contract) ? $contract->delivery_instructions : old('delivery_instructions')}}">
+                            @error('delivery_instructions')
                                 <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                                 </span>
@@ -609,21 +616,63 @@
    
    $(document).ready(function(){
     // $("[name='delivery_instructions']").tagsinput();
-        @if(isset($contract))
+        @if( old('user_type'))
             $("[name='user_type']").trigger('change');
         @endif
 
    })
 
    $("[name='user_type']").on('change', function(){
-    if ($(this).val()=='customer') {
-        $('.cust__frag').show();
-        $('.vend__frag').hide();
-    }else{
-        $('.cust__frag').hide();
-        $('.vend__frag').show();
-    }
+        if ($(this).val()=='customer') {
+            $('.cust__frag').show(); 
+            @if(!old('user_type'))
+                $("[name='customer']").val(''); 
+            @else
+                $("[name='customer']").trigger('change')
+            @endif
+            $("[name='salesperson_id']").empty();
+
+            $('.vend__frag').hide();
+        }else{
+            $('.vend__frag').show(); 
+            @if(!old('user_type'))
+                $("[name='vendor']").val(''); 
+            @else
+                $("[name='vendor']").trigger('change')
+            @endif
+            $("[name='purchaser_id']").empty();
+
+            $('.cust__frag').hide();
+        }
    })
+
+    $("[name='customer']").on('change', function(){
+        getOptions('customer',$("[name='customer']").val());
+    })
+
+    $("[name='vendor']").on('change', function(){
+        getOptions('vendor',$("[name='vendor']").val());
+    })
+
+   function getOptions(type, id){
+        $.ajax({
+            url: "{{ url('/') }}/backend/options?type="+type+"&id="+id,
+            type: 'GET',
+            success: function (res) {
+                // fullPageLoader(false);
+                if (res.status) {
+                    if (type=='customer') {
+                        $("[name='salesperson_id']").html(res.options);
+                    }else if(type=='vendor') {
+                        $("[name='purchaser_id']").html(res.options);
+                    }
+                }
+                else if(res.status) {
+                    toastr.success(res.message)
+                }
+            }
+        });
+   }
 </script>
 
 <script>

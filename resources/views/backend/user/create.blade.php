@@ -157,7 +157,7 @@
                         
                         <div class="form-group col-md-4">
                             <h6 class="m-b-5">User Avatar</h6>
-                            <p class="opacity-07 font-size-13 m-b-3">Recommended Dimensions: 120x120 Max fil size: 5MB</p>
+                            <p class="opacity-07 font-size-13 m-b-3">Recommended Dimensions: {{-- 120x120 --}}Max file size: 5MB</p>
                             <input type="file" class="form-control" name="profile_image"/>
         
                             @error('logo')
@@ -175,8 +175,36 @@
                            <select class="form-control" name="role" id="role">
                               <option value="">Select Role</option>
                               <option value="customer" {{$role=='customer' ? 'selected' : ''}}>Customer</option>
+                              <option value="salesperson" {{$role=='salesperson' ? 'selected' : ''}}>Salesperson</option>
                               <option value="vendor" {{$role=='vendor' ? 'selected' : ''}}>Vendor</option>
-                              <option value="employee" {{$role=='employee' ? 'selected' : ''}}>Employee</option>
+                              <option value="purchaser" {{$role=='purchaser' ? 'selected' : ''}}>Purchaser</option>
+                              <option value="employee" {{$role=='employee' ? 'selected' : ''}}>User</option>
+                           </select>
+                        </div>
+
+                        @php
+                           $display_sp=isset($user) && $user->hasRole('customer') ? 'block' : 'none';
+                        @endphp
+                        <div id="salesperson" style="display: {{$display_sp}}" class="form-group col-md-4 associate__entity">
+                           
+                           <label class="font-weight-semibold">Salesperson:</label>
+                           <select class="form-control" name="salesperson[]" multiple="multiple" id="salesperson_select">
+                              @foreach ($salesperson as $sp)
+                                 <option value="{{$sp->id ?? ''}}">{{$sp->name ?? ''}}</option>
+                              @endforeach
+                           </select>
+                        </div>
+
+                        @php
+                           $display_p=isset($user) && $user->hasRole('vendor') ? 'block' : 'none';
+                        @endphp
+                        <div id="purchaser" style="display: {{$display_p}}" class="form-group col-md-4 associate__entity">
+                           
+                           <label class="font-weight-semibold">Purchaser:</label>
+                           <select class="form-control" name="purchaser[]" multiple="multiple" id="purchaser_select">
+                              @foreach ($purchaser as $p)
+                                 <option value="{{$p->id ?? ''}}">{{$p->name ?? ''}}</option>
+                              @endforeach
                            </select>
                         </div>
                         <div class="form-group col-md-4">
@@ -255,25 +283,36 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <script type="text/javascript">
    
-   $(document).ready(function(){
-    $("#permission_select").select2();
+    $(document).ready(function(){
+        $("#permission_select").select2();
+        $("#salesperson_select").select2();
+        $("#purchaser_select").select2();
 
-      @if (isset($user) && $user->getAllPermissions()) 
-        // console.log({!! json_encode($user->getAllPermissions()->pluck('name')->toArray())!!});
-        $("#permission_select").val({!! json_encode($user->getAllPermissions()->pluck('name')->toArray())!!}).trigger('change');
-       
-      @endif
+        @if (isset($user) && $user->getAllPermissions()->count()) 
+            // console.log({!! json_encode($user->getAllPermissions()->pluck('name')->toArray())!!});
+            $("#permission_select").val({!! json_encode($user->getAllPermissions()->pluck('name')->toArray())!!}).trigger('change');
+        @elseif (isset($user) && $user->hasRole('customer')) 
+            console.log({!! json_encode($user->getAssociation()->pluck('id')->toArray())!!});
+            $("#salesperson_select").val({!! json_encode($user->getAssociation()->pluck('id')->toArray())!!}).trigger('change');
+        @elseif (isset($user) && $user->hasRole('vendor'))
+            $("#purchaser_select").val({!! json_encode($user->getAssociation()->pluck('id')->toArray())!!}).trigger('change');
+        @endif
 
-      //select on change option
-      $('#role').on('change', function(){
-         var role = $(this).val();
-         if(role == 'employee'){
-            $('#permissions').show();
-         }else{
-            $('#permissions').hide();
-         }
-      });
-   })
+        //select on change option
+        $('#role').on('change', function(){
+            var role = $(this).val();
+            if(role == 'employee'){
+                $('#permissions').show(); $('.associate__entity').hide(); return;
+            }else if(role == 'customer'){
+                $('#salesperson').show(); $('#purchaser').hide(); return;
+            }else if(role == 'vendor'){
+                $('#purchaser').show(); $('#salesperson').hide(); return;
+            }
+
+            $('#permissions').hide();$('#purchaser').hide();$('#salesperson').hide();
+            
+        });
+    })
 
 </script>
 

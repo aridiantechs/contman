@@ -88,7 +88,7 @@
                                                     Don't have an account? 
                                                     <a href="{{ route('register') }}"> Signup</a>
                                                 </span> --}}
-                                                <button class="btn btn-primary w-100">Sign In</button>
+                                                <button class="btn btn-primary w-100 text-white">Sign In</button>
                                             </div>
                                         </div>
                                     </form>

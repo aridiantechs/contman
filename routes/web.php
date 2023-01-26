@@ -98,10 +98,7 @@ Route::group([
         Route::delete('contract/{id}', [ContractController::class, 'destroy'])->name('contract.destroy');
     });
     
-    Route::resource('blog', BlogController::class);
-
-    Route::resource('orders', OrderController::class);
-    Route::resource('coupon', CouponController::class);
+    Route::get('/options',[DashboardController::class, 'options'])->name('options');
     //deactive coupon
     Route::get('coupon/deactive/{id}', [CouponController::class, 'deactive'])->name('coupon.deactive');
 

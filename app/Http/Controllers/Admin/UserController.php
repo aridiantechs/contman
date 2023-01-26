@@ -48,9 +48,12 @@ class UserController extends Controller
             $q->where('name','<>','superadmin');
         });
 
+        $salesperson=User::salesperson()->get();
+        $purchaser=User::purchaser()->get();
+
         $roles=(clone $users)->get();
         $permissions=Permission::all();
-        return view('backend.user.create',compact('roles','permissions'));
+        return view('backend.user.create',compact('salesperson','purchaser','roles','permissions'));
     }
 
     /**
@@ -74,11 +77,15 @@ class UserController extends Controller
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'phone' => ['required', 'string'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|string',
-            'profile_image'=>'nullable|image',
-            'role' => 'string|in:vendor,customer,employee',
+            'profile_image'=>'nullable|image|max:5000',
+            'role' => 'string|exists:roles,name',
+            'salesperson' => ['required_if:role,==,customer','array'],
+            'salesperson.*' => ['exists:users,id'],
+            'purchaser' => ['required_if:role,==,vendor','array'],
+            'purchaser.*' => ['exists:users,id'],
             'permissions' => ['required_if:role,==,employee','array'],
             'permissions.*' => ['string',function($attribute, $value, $fail) use ($request){
                 $perm=Permission::where('name',$value)->first();
@@ -104,7 +111,8 @@ class UserController extends Controller
             'phone' =>$request->phone,
             'phone_c_data'=>$request->new_phone,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'association' => $request->role=='customer' ? implode('|',$request->salesperson) : ($request->role=='vendor' ? implode('|',$request->purchaser) :null)
         ]);
 
         if($request->hasFile('profile_image')){
@@ -134,20 +142,6 @@ class UserController extends Controller
         //
     }
 
-    public function assignRole(Request $request)
-    {
-        $user=User::findOrFail($request->user_id);
-        if ($user) {
-            $role=Role::where('id',$request->role_id)->first();
-            if ($role) {
-                $user->removeRole($user->roles[0]->name);
-                $user->assignRole($role->name);
-                return redirect()->back()->with("status", "Role has been Updated.");
-            }
-        }
-
-    }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -159,7 +153,10 @@ class UserController extends Controller
         $user= User::findOrFail($id);
         $roles=Role::where('name','<>','superadmin')->get();
         $permissions=Permission::all();
-        return view('backend.user.create',compact('user','roles','permissions'));
+
+        $salesperson=User::salesperson()->get();
+        $purchaser=User::purchaser()->get();
+        return view('backend.user.create',compact('salesperson','purchaser','user','roles','permissions'));
     }
 
     /**
@@ -188,7 +185,11 @@ class UserController extends Controller
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|string',
             'password'  => 'string|nullable',
-            'role' => 'string|in:vendor,customer,employee',
+            'role' => 'string|exists:roles,name',
+            'salesperson' => ['required_if:role,==,customer','array'],
+            'salesperson.*' => ['exists:users,id'],
+            'purchaser' => ['required_if:role,==,vendor','array'],
+            'purchaser.*' => ['exists:users,id'],
             'permissions' => ['required_if:role,==,employee','array'],
             'permissions.*' => ['string',function($attribute, $value, $fail) use ($request){
                 $perm=Permission::where('name',$value)->first();
@@ -209,7 +210,8 @@ class UserController extends Controller
         $user->fill($request->except(['_token','password','phone','phone_c_data']));
         $user->phone = $request->phone;
         $user->phone_c_data = $request->new_phone;
-
+        $user->association = $request->role=='customer' ? implode('|',$request->salesperson) : ($request->role=='vendor' ? implode('|',$request->purchaser) :null);
+        
         if (!is_null($request->password)) {
             $user->password=Hash::make($request->password);
         }

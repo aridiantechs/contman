@@ -35,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'otp_expiry',
         'otp_verified_at',
         'profile_image',
+        'association'
     ];
 
     /**
@@ -77,6 +78,53 @@ class User extends Authenticatable implements MustVerifyEmail
     public function devices()
     {
         return $this->hasMany('App\Models\UserDevice');
+    }
+
+    public function scopeSalesperson($query)
+    {
+        return $query->whereHas('roles',function($q){
+            $q->where('name','salesperson');
+        });
+    }
+
+    public function scopeCustomer($query)
+    {
+        return $query->whereHas('roles',function($q){
+            $q->where('name','customer');
+        });
+    }
+
+    public function scopePurchaser($query)
+    {
+        return $query->whereHas('roles',function($q){
+            $q->where('name','purchaser');
+        });
+    }
+
+    public function scopeVendor($query)
+    {
+        return $query->whereHas('roles',function($q){
+            $q->where('name','vendor');
+        });
+    }
+
+    public function scopeEmployee($query)
+    {
+        return $query->whereHas('roles',function($q){
+            $q->where('name','employee');
+        });
+    }
+
+    public function getAssociation()
+    {
+        if ($this->association) {
+            $as=explode('|',$this->association);
+            $users=User::whereIn('id',$as)->get();
+            return $users;
+        } else {
+            return collect();
+        }
+        
     }
 
     public function getProfileImageAttribute($value)

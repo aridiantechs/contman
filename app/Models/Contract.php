@@ -21,6 +21,11 @@ class Contract extends Model
         return $this->belongsTo('App\Models\User','customer_id');
     }
     
+    public function association()
+    {
+        return $this->belongsTo('App\Models\User','association_id');
+    }
+    
     public function vendor()
     {
         return $this->belongsTo('App\Models\User','vendor_id');

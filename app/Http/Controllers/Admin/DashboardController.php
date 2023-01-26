@@ -71,6 +71,26 @@ class DashboardController extends Controller
 		}
   	}
 
+  	public function options(Request $request) 
+  	{
+		if (in_array($request->query('type'),['customer','vendor'])) {
+			$user=User::where('id',$request->id)->first();
+			if ($user) {
+				$options=$user->getAssociation();
+				return response()->json([
+					"status"=>true,
+					"options"=>view('backend.components.options',compact('options'))->render()
+				],200);
+			}
+			
+		}
+
+		return response()->json([
+			"status"=>false,
+		],400);
+		
+  	}
+
   	public function profile() 
   	{
 	      return view('backend.profile.index');

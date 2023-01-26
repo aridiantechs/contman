@@ -58,8 +58,7 @@
 											<tr>
 												<th class="bold">#</th>
                                                 <th>Type</th>
-											   <th>Vendor</th>
-											   <th>Purchaser</th>
+											   <th>User</th>
 											   <th>Start date</th>
 											   <th>End date</th>
 											   <th>Renewal date</th>
@@ -76,8 +75,7 @@
 												<tr>
 													<td>{{++$key}}</td>
 													<td class="name-badge p-3">{{ $contract->user_type ?? '' }}</td>
-													<td>{{ $contract->vendor->name ?? '' }}</td>
-													<td>{{ $contract->customer->name ?? '' }}</td>
+													<td>{{ $contract->association->name ?? '' }}</td>
 													<td>{{ $contract->start_date ?? '' }}</td>
 													<td>{{ $contract->end_date ?? '' }}</td>
 													<td>{{ $contract->renewal_date ?? '' }}</td>
