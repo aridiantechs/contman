@@ -236,10 +236,9 @@
                               @enderror
                         </div>
                         <div class="form-group col-md-4">
-                            <label class="font-weight-semibold">Birthday</label>
+                            <label class="font-weight-semibold">Designation</label>
                             <div class="input-affix m-b-10">
-                                <i class="prefix-icon anticon anticon-calendar"></i>
-                                <input type="text" class="form-control datepicker-input" value="{{isset($user) ? $user->date_of_birth : ''}}" name="date_of_birth" placeholder="Pick a date">
+                                <input type="text" class="form-control" value="{{isset($user) ? $user->designation : ''}}" name="designation" placeholder="Designation">
                             </div>
                         </div>
 
@@ -329,9 +328,9 @@
       var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
 
       var iti=window.intlTelInput(phone,{
-          initialCountry: "us",
           separateDialCode: true,
-          preferredCountries: ["fr", "us", "gb"],
+          allowDropdown:false,
+          onlyCountries: ["dk"],
           geoIpLookup: function (callback) {
               $.get('https://ipinfo.io', function () {
               }, "jsonp").always(function (resp) {

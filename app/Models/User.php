@@ -35,7 +35,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'otp_expiry',
         'otp_verified_at',
         'profile_image',
-        'association'
+        'association',
+        'designation',
     ];
 
     /**

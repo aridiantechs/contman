@@ -107,7 +107,7 @@ class UserController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'gender' => $request->gender ?? '',
-            'date_of_birth' => $request->date_of_birth ?? '',
+            'designation' => $request->designation ?? '',
             'phone' =>$request->phone,
             'phone_c_data'=>$request->new_phone,
             'email' => $request->email,
@@ -208,6 +208,7 @@ class UserController extends Controller
         
         $user =User::findOrFail($id);
         $user->fill($request->except(['_token','password','phone','phone_c_data']));
+        $user->designation = $request->designation ?? '';
         $user->phone = $request->phone;
         $user->phone_c_data = $request->new_phone;
         $user->association = $request->role=='customer' ? implode('|',$request->salesperson) : ($request->role=='vendor' ? implode('|',$request->purchaser) :null);
