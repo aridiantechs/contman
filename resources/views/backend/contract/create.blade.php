@@ -547,7 +547,7 @@
                                 $product_category = isset($contract) ? $contract->product_category :old('product_category');
                             @endphp
                             <label class="font-weight-semibold">Product Category</label>
-                            <select class="form-control" name="product_category">
+                            <select class="form-control" name="product_category[]" multiple>
                                 <option value="">Select type</option>
                                 @foreach ($categories as $cat)
                                     <option value="{{$cat->id ?? ''}}" {{$product_category==$cat->id ? 'selected' : ''}}>{{$cat->category_name ?? ''}}</option>
@@ -620,6 +620,7 @@
             $("[name='user_type']").trigger('change');
         @endif
 
+        $("[name='product_category[]']").select2();
    })
 
    $("[name='user_type']").on('change', function(){

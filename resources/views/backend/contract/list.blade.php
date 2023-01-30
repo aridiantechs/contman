@@ -5,6 +5,61 @@
     th{
         font-weight: 700 !important;
     }
+
+    /* The side navigation menu */
+	.sidenav {
+		height: 90%; /* 100% Full-height */
+		width: 0; /* 0 width - change this with JavaScript */
+		position: fixed; /* Stay in place */
+		z-index: 1;
+		top: 80px;
+		right: 0;
+		background-color: #fff;
+		box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 8%);
+		overflow-x: hidden;
+		padding-top: 60px;
+		transition: 0.5s;
+	}
+
+		/* The navigation menu links */
+	.sidenav a {
+		padding: 8px 8px 8px 32px;
+		text-decoration: none;
+		font-size: 25px;
+		color: #818181;
+		display: block;
+		transition: 0.3s;
+	}
+
+	/* When you mouse over the navigation links, change their color */
+	.sidenav a:hover {
+		color: #f1f1f1;
+	}
+
+	/* Position and style the close button (top right corner) */
+	.sidenav .closebtn {
+		position: absolute;
+		top: 0;
+		right: 25px;
+		font-size: 36px;
+		margin-left: 50px;
+	}
+
+	@media screen and (max-height: 450px) {
+		.sidenav {padding-top: 15px;}
+		.sidenav a {font-size: 18px;}
+	}
+    @media screen and (max-width:767px){
+		.sidenav {
+			top:10px;
+		}
+	}
+
+	@media screen and (max-width:991px){
+		.sidenav {
+			height: 90%;
+		}
+    }
 </style>
 @endsection
 
@@ -43,6 +98,24 @@
                         </a>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <form class="form-row" action="{{ getFullUrl() }}">
+                    <h3 class="col-md-12">Search contracts</h3>
+                    <hr>
+                    <div class="form-group col-md-4">
+                        <input type="text" class="form-control" id="search_text" name="search_text" value="{{request()->query('search_text')}}">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button class="btn btn-primary search__" type="button">Go</button>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                        <button class="btn btn-primary float-right" type="button" onclick="openNav()"><i class="fa fa-filter"></i> Filter</button>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="row">
@@ -116,6 +189,95 @@
         </div>
 
     </div>
+
+    <div id="filterSidenav" class="sidenav">
+		
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<form class="container" method="GET">
+            <input type="hidden" name="search_text" value="{{request()->query('search_text')}}">
+			<div class="row mt-3">
+				<div class="col-md-12 mb-2">
+					<h4><i class="fa fa-filter"></i> Filter:</h4>
+				</div>
+				<div class="form-group col-md-12">
+                    @php
+                        $user_type = request()->query('type') ? request()->query('type') :'';
+                    @endphp
+                    <label class="font-weight-semibold" for="language">Type</label>
+                    <select id="country" class="form-control" name="type" required>
+                        <option value="" selected>select...</option>
+                        <option value="vendor" {{ $user_type=="vendor" ? 'selected' : ''}}>Vendor </option>
+                        <option value="customer" {{ $user_type=="customer" ? 'selected' : ''}}>Customer </option>
+                    </select>
+                </div>
+                <div class="form-group col-md-12">
+                    @php
+                        $product_category = request()->query('product_category') ? request()->query('product_category') :'';
+                    @endphp
+                    <label class="font-weight-semibold" for="fullAddress">Product Category:</label>
+                    <select class="form-control" name="product_category">
+                        <option value="" selected>Select...</option>
+                        @foreach ($categories as $cat)
+                            <option value="{{$cat->id ?? ''}}" {{ $product_category==$cat->id ? 'selected' : ''}}>{{$cat->category_name ?? ''}}</option>
+                        @endforeach
+                    </select>
+                    
+                </div>
+                <div class="form-group col-md-12">
+                    @php
+                        $contract_type = request()->query('contract_type') ? request()->query('contract_type') :'';
+                    @endphp
+                    <label class="font-weight-semibold">Contract Type</label>
+                    <select class="form-control" name="contract_type">
+                        <option value="">Select type</option>
+                        <option value="normal" {{$contract_type=="normal" ? 'selected' : ''}}>Normal</option>
+                        <option value="company" {{$contract_type=="company" ? 'selected' : ''}}>Company</option>
+                    </select>
+                    @error('contract_type')
+                        <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group col-md-12">
+                    @php
+                        $extension = request()->query('extension') ? request()->query('extension') :'';
+                    @endphp
+                    <label class="font-weight-semibold">Extension</label>
+                    <select class="form-control" name="extension">
+                        <option value="">Select type</option>
+                        <option value="automatic" {{$extension=="automatic" ? 'selected' : ''}}>Automatic</option>
+                    </select>
+                    @error('extension')
+                        <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group col-md-12">
+                    @php
+                        $extension_period = request()->query('extension_period') ? request()->query('extension_period') :'';
+                    @endphp
+                    <label class="font-weight-semibold">Extension Period</label>
+                    <select class="form-control" name="extension_period">
+                        <option value="">Select type</option>
+                        <option value="12-months" {{$extension_period=="12-months" ? 'selected' : ''}}>12 months</option>
+                    </select>
+                    @error('extension_period')
+                        <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+				<div class="col-md-12">
+					<div class="form-group">
+						<button class="btn btn-primary" type="submit">Submit</button>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
 
     <!-- Search Start-->
     <div class="modal modal-left fade search" id="search-drawer">
@@ -308,19 +470,34 @@
 			
 		});
 
-		@if($errors->has('member_id') || $errors->has('title') || $errors->has('description') )
-			$('#picklist-modal').modal('show');
+		@if(request()->query())
+            openNav();
 		@endif
 		
-		$('#daterange').daterangepicker({
-			// minDate: moment().startOf('day'),
-		});
-		@if(request()->query('date')=='')
-			$('#daterange').val('');
-		@endif
-		
+        $('.search__').on('click', function(){
+            var search = new URLSearchParams(location.search);
+            if (search.has("search_text")) {
+                search.set("search_text", $('#search_text').val());
+                var newSearch = search.toString();
+                window.history.pushState({}, "", `${location.pathname}?${newSearch}`);
+            }
+            
+            window.location.reload();
+        })
 	});
 
+    function openNav() {
+        document.getElementById("filterSidenav").style.width = "400px";
+        if($('.bulkupdate').is(':checked')){
+            $('#startdatediv').css('display','none');
+        }else{
+            $('#startdatediv').css('display','block');
+        }
+    }
+
+    function closeNav() {
+        document.getElementById("filterSidenav").style.width = "0";
+	}
 </script>
 
 <script>

@@ -542,7 +542,7 @@
                                 $product_category = isset($contract) ? $contract->product_category :old('product_category');
                             @endphp
                             <label class="font-weight-semibold">Product Category</label>
-                            <select class="form-control" name="product_category">
+                            <select class="form-control" name="product_category[]" multiple>
                                 <option value="">Select type</option>
                                 @foreach ($categories as $cat)
                                     <option value="{{$cat->id ?? ''}}" {{$product_category==$cat->id ? 'selected' : ''}}>{{$cat->category_name ?? ''}}</option>
@@ -631,9 +631,12 @@
          }
       })
     
-      // $("[name='delivery_instructions']").tagsinput();
+      $("[name='product_category[]']").select2();
+      
         @if(isset($contract))
-            $("[name='user_type']").trigger('change');
+            $user_type = $("[name='user_type']:checked").val();
+            $("#"+$user_type).trigger('change');
+            $("[name='product_category[]']").val({!! json_encode($contract->product_categories()->pluck('product_category_id')->toArray())!!}).trigger('change')
         @endif
 
    })

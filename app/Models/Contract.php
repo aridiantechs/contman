@@ -21,6 +21,11 @@ class Contract extends Model
         return $this->belongsTo('App\Models\User','customer_id');
     }
     
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User','user_id');
+    }
+    
     public function association()
     {
         return $this->belongsTo('App\Models\User','association_id');
@@ -29,6 +34,12 @@ class Contract extends Model
     public function vendor()
     {
         return $this->belongsTo('App\Models\User','vendor_id');
+    }
+
+    
+    public function product_categories()
+    {
+        return $this->hasMany('App\Models\ContractProductCategory','contract_id');
     }
 
     public function order_items()

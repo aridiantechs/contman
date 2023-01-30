@@ -16,6 +16,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Models\ContractProductCategory;
 use Illuminate\Support\Facades\Validator;
 
 class ContractController extends Controller
@@ -27,11 +28,53 @@ class ContractController extends Controller
      */
     public function index(Request $request)
     {
+        $categories=Category::where('category_type','product')->get();
         $contracts=Contract::when($request->query('type'),function($q)use($request){
             $q->where('user_type',$request->type);
+        })
+        ->when($request->query('search_text'),function($q)use($request){
+            $search=$request->query('search_text');
+            $q->where(function($q)use($search){
+                $q->where('user_type',$search)
+                    ->orWhereHas('user',function($q)use($search){
+                        $q->where('first_name','LIKE','%'.$search.'%')->orWhere('last_name','LIKE','%'.$search.'%');
+                    })
+                    ->orWhereHas('association',function($q)use($search){
+                        $q->where('first_name','LIKE','%'.$search.'%')->orWhere('last_name','LIKE','%'.$search.'%');
+                    })
+                    ->orWhere('start_date',$search)
+                    ->orWhere('end_date',$search)
+                    ->orWhere('renewal_date',$search)
+                    ->orWhere('renewal_deadline_date',$search)
+                    ->orWhere('contract_value',$search)
+                    ->orWhere('contract_type',$search)
+                    ->orWhere('extension',$search)
+                    ->orWhere('extension_period',$search)
+                    ->orWhere('performance_delivery_degree',$search)
+                    ->orWhere('performance_delivery_time',$search)
+                    ->orWhere('performance_quality',$search)
+                    ->orWhere('element_delivery_degree',$search)
+                    ->orWhere('element_delivery_time',$search)
+                    ->orWhere('element_quality',$search)
+                    ->orWhere('delivery_instructions','LIKE','%'.$search.'%');
+            });
+        })
+        ->when($request->query('product_category'),function($q)use($request){
+            $q->whereHas('product_categories',function($q)use($request){
+                $q->where('product_category_id',$request->query('product_category'));
+            });
+        })
+        ->when($request->query('contract_type'),function($q)use($request){
+            $q->where('contract_type',$request->contract_type);
+        })
+        ->when($request->query('extension'),function($q)use($request){
+            $q->where('extension',$request->extension);
+        })
+        ->when($request->query('extension_period'),function($q)use($request){
+            $q->where('extension_period',$request->extension_period);
         })->paginate(15);
 
-        return view('backend.contract.list',compact('contracts'));
+        return view('backend.contract.list',compact('contracts','categories'));
     }
 
     /**
@@ -61,8 +104,8 @@ class ContractController extends Controller
     {
         $rules=[
             "user_type" => ['required', 'in:customer,vendor'],
-            "customer" => ['required', 'exists:users,id'],
-            "vendor" => ['required', 'exists:users,id'],
+            "customer" => ['required_if:user_type,==,customer'],
+            "vendor" => ['required_if:user_type,==,vendor'],
             "start_date" => ['required', 'date'],
             "end_date" => ['required', 'date'],
             "renewal_date" => ['required', 'date'],
@@ -86,7 +129,8 @@ class ContractController extends Controller
                 "element_delivery_time" => ['required', 'string'],
                 "element_quality" => ['required', 'string'],
                 "delivery_instructions" => ['required', 'string'],
-                "product_category" => ['required', 'integer'],
+                "product_category" => ['required', 'array'],
+                "product_category.*" => ['required', 'integer'],
                 "status_meeting" => ['required', 'string'],
                 "meeting_date" => ['required', 'date']
             ]);
@@ -101,7 +145,7 @@ class ContractController extends Controller
                     ->withInput()
                     ->with('error','validation error');
         }
-        
+        // dd($request->all());
         $contract = new Contract;
         $contract->order_id = uniqid();
         $contract->user_type = $request->user_type;
@@ -124,13 +168,18 @@ class ContractController extends Controller
             $contract->element_delivery_time = $request->element_delivery_time;
             $contract->element_quality = $request->element_quality;
             $contract->delivery_instructions = $request->delivery_instructions;
-            $contract->product_category = $request->product_category;
             $contract->status_meeting = $request->status_meeting;
             $contract->meeting_date = $request->meeting_date;
         }
         $contract->emp_id = auth()->user()->id;
         $contract->save();
 
+        foreach ($request->product_category as $key => $pc) {
+            ContractProductCategory::insert([
+                'contract_id'=>$contract->id, 'product_category_id'=> $pc
+            ]);
+        }
+        
         if($request->hasFile('contract_file')) {
             if (is_array($request->contract_file)) {
                 $files = $request->file('contract_file');
@@ -155,7 +204,7 @@ class ContractController extends Controller
         }
 
         $contract->save();
-        // dd($request->all());
+        dd($request->all());
         return redirect()->back()->with("status", "Contract has been Created.");
     }
 

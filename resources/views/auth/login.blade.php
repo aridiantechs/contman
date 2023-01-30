@@ -13,6 +13,8 @@
 
     <!-- Core css -->
     <link href="{{asset('backend/assets/css/app.min.css')}}" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
     <style>
         .text-color1{
             color: #e31c79;
@@ -71,7 +73,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="font-weight-semibold" for="password">Password:</label>
-                                            <a class="float-right font-size-13 text-muted" href="">Forget Password?</a>
+                                            <a class="float-right font-size-13 text-muted" href="{{ route('password.request') }}">Forget Password?</a>
                                             <div class="input-affix m-b-10">
                                                 <i class="prefix-icon anticon anticon-lock"></i>
                                                 <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Password">
@@ -120,7 +122,24 @@
 
     <!-- Core JS -->
     <script src="{{asset('backend/assets/js/app.min.js')}}"></script>
-
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            @if(session()->has('error'))
+                toastr.error('{{ session('error') }}')
+            @endif
+    
+            @if(session()->has('warning'))
+                toastr.warning('{{ session('warning') }}')
+            @endif
+    
+                
+            @if(session()->has('status'))
+                toastr.success('{{ session('status') }}')
+            @endif
+        });
+    </script>
 </body>
 
 </html>

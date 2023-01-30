@@ -59,6 +59,21 @@ if (!function_exists('on_page')) {
     }
 }
 
+if (!function_exists('getFullUrl'))
+{
+    function getFullUrl($new_q=[])
+    {
+        //Retrieve current query strings:
+        $currentQueries = request()->query();
+
+        //Merge together current and new query strings:
+        $allQueries = array_merge($currentQueries, $new_q);
+
+        //Generate the URL with all the queries:
+        return request()->fullUrlWithQuery($allQueries);
+    }
+}
+
 if (!function_exists('return_if')) {
     /**
      * Appends passed value if condition is true
