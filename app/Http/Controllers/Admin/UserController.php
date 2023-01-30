@@ -29,6 +29,11 @@ class UserController extends Controller
     {
         $users=User::whereHas('roles',function($q){
             $q->where('name','<>','superadmin');
+        })
+        ->when($request->query('type'),function($q)use($request){
+            $q->whereHas('roles',function($q)use($request){
+                $q->where('name',$request->query('type'));
+            });
         });
 
         $roles=(clone $users)->get();

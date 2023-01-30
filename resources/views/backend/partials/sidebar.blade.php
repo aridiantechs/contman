@@ -57,23 +57,36 @@
                     </li>
                 </ul>
             </li>
-            {{-- <li class="nav-item {{\Route::is('backend.coupon.index') ? 'active' :''}}">
-                <a href="{{route('backend.coupon.index')}}">
-                    <span class="icon-holder">
-                        <i class="fas fa-tags"></i>
-                    </span>
-                    <span class="title">Coupons</span>
-                </a>
-            </li> --}}
-            
-            <li class="nav-item {{\Route::is('backend.user.index') ? 'active' :''}}">
-                <a href="{{route('backend.user.index')}}">
+
+            <li class="nav-item dropdown {{\Route::is('backend.user.*') ? 'active' :''}}">
+                <a class="dropdown-toggle" href="javascript:void(0);">
                     <span class="icon-holder">
                         <i class="fas fa-briefcase"></i>
                     </span>
                     <span class="title">Users & Admins</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
                 </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="{{route('backend.user.index')}}">All Users</a>
+                    </li>
+                    <li>
+                        <a href="{{route('backend.user.index')}}?type=customer">Customer</a>
+                    </li>
+                    <li>
+                        <a href="{{route('backend.user.index')}}?type=vendor">Vendor</a>
+                    </li>
+                    <li>
+                        <a href="{{route('backend.user.index')}}?type=employee">Admin</a>
+                    </li>
+                    <li>
+                        <a href="{{route('backend.user.create')}}">Add Contract</a>
+                    </li>
+                </ul>
             </li>
+            
            {{-- <li class="nav-item {{\Route::is('backend.blog.index') ? 'active' :''}}">
                 <a href="{{route('backend.blog.index')}}">
                     <span class="icon-holder">
