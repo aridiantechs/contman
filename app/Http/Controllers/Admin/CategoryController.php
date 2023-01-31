@@ -65,6 +65,12 @@ class CategoryController extends Controller
         $category->category_type='product';
         $category->save();
         
+        activity('category')
+            ->performedOn($category)
+            ->causedBy(auth()->user())
+            ->withProperties(['category_id' => $category->id])
+            ->log('Category created by ' . auth()->user()->name);
+
         return redirect()->back()->with("status", "category has been Created.");
     }
 
@@ -135,7 +141,12 @@ class CategoryController extends Controller
         $category->category_name=$request->name;
         $category->category_type='product';
         $category->save();
-        
+
+        activity('category')
+            ->performedOn($category)
+            ->causedBy(auth()->user())
+            ->withProperties(['category_id' => $category->id])
+            ->log('Category updated by ' . auth()->user()->name);
         return redirect()->back()->with("status", "category has been Updated.");
     }
 
@@ -150,6 +161,11 @@ class CategoryController extends Controller
         $cat=Category::findOrFail($id);
         if ($cat) {
             $cat->delete();
+            activity('category')
+                ->performedOn($cat)
+                ->causedBy(auth()->user())
+                ->withProperties(['category_id' => $category->id])
+                ->log('Category updated by ' . auth()->user()->name);
         }
        
         return redirect()->route('backend.category.index')->with('status', 'Category has been deleted!');

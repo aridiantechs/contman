@@ -157,7 +157,7 @@
 													<td>{{ $contract->end_date ?? '' }}</td>
 													<td>{{ $contract->renewal_date ?? '' }}</td>
 													<td>{{ $contract->renewal_deadline_date ?? '' }}</td>
-													<td>{{ $contract->contract_value ?? '' }}</td>
+													<td> $ {{$contract->contract_value ?? '' }}</td>
 													<td class="d-flex">
                                                         {{-- <div class="dropdown dropdown-inline">
                                                             <button type="button" class="btn btn-default btn-icon btn-sm btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -174,11 +174,11 @@
                                                             'data' => $contract->id, 
                                                             'route' =>route('backend.contract.destroy',$contract->id), 
                                                         ])
-                                                        <a href="{{route('backend.contract.edit',$contract->id)}}" class="btn btn-success btn-tone ml-2 d-flex">
+                                                        <a href="{{route('backend.contract.edit',$contract->order_id)}}" class="btn btn-success btn-tone ml-2 d-flex">
                                                             <i class="fas fa-edit "></i>
                                                             <span class="m-{{$alignShortRev}}-5">Edit</span>
                                                         </a>
-                                                        <a href="{{route('backend.contract.show',$contract->id)}}" class="btn btn-info btn-tone ml-2 d-flex">
+                                                        <a href="{{route('backend.contract.show',$contract->order_id)}}" class="btn btn-info btn-tone ml-2 d-flex">
                                                             <i class="fas fa-eye "></i>
                                                             <span class="m-{{$alignShortRev}}-5">View</span>
                                                         </a>

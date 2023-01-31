@@ -133,6 +133,12 @@ class UserController extends Controller
             $user->givePermissionTo($request->permissions);
         }
         
+        activity('user')
+            ->performedOn($user)
+            ->causedBy(auth()->user())
+            ->withProperties(['user_id' => $user->id])
+            ->log('User created by ' . auth()->user()->name);
+
         return redirect()->back()->with("success", "User has been Created.");
     }
 
@@ -237,7 +243,13 @@ class UserController extends Controller
         if ($request->role=='employee') {
             $user->givePermissionTo($request->permissions);
         }
-        
+
+        activity('user')
+            ->performedOn($user)
+            ->causedBy(auth()->user())
+            ->withProperties(['user_id' => $user->id])
+            ->log('User updated by ' . auth()->user()->name);
+
         return redirect()->back()->with("status", "User has been Updated.");
     }
 
@@ -253,6 +265,13 @@ class UserController extends Controller
         $user->roles()->detach();
         $user->permissions()->detach();
         $user->delete();
+
+        activity('user')
+            ->performedOn($user)
+            ->causedBy(auth()->user())
+            ->withProperties(['user_id' => $user->id])
+            ->log('User deleted by ' . auth()->user()->name);
+
         return redirect()->back();
     }
 

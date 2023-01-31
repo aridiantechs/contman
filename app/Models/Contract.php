@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Spatie\Activitylog\LogOptions;
+
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Contract extends Model
 {
+    use LogsActivity;
     protected $fillable=[
         "order_id",
         "user_id",
@@ -15,6 +19,11 @@ class Contract extends Model
         "confirmed",
         'payment_obj'
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults();
+    }
     
     public function customer()
     {

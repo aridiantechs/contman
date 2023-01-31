@@ -205,6 +205,12 @@ class ContractController extends Controller
 
         $contract->save();
         
+        activity('contract')
+            ->performedOn($contract)
+            ->causedBy(auth()->user())
+            ->withProperties(['contract_id' => $contract->id])
+            ->log('Contract created by ' . auth()->user()->name);
+
         return redirect()->back()->with("status", "Contract has been Created.");
     }
 
@@ -216,7 +222,7 @@ class ContractController extends Controller
      */
     public function show($id)
     {
-        $contract=Contract::findOrFail($id);
+        $contract=Contract::where('order_id',$id)->first();
         return view('backend.contract.report',compact('contract'));
     }
 
@@ -228,7 +234,7 @@ class ContractController extends Controller
      */
     public function edit($id)
     {
-        $contract=Contract::findOrFail($id);
+        $contract=Contract::where('order_id',$id)->first();
         $customers=User::customer()->get();
         
         $vendors=User::vendor()->get();
@@ -351,7 +357,13 @@ class ContractController extends Controller
         }
 
         $contract->save();
-        
+
+        activity('contract')
+            ->performedOn($contract)
+            ->causedBy(auth()->user())
+            ->withProperties(['contract_id' => $contract->id])
+            ->log('Contract updated by ' . auth()->user()->name);
+
         return redirect()->back()->with("status", "Contract has been Updated.");
     }
 
@@ -365,14 +377,11 @@ class ContractController extends Controller
     {
         $contract=Contract::findOrFail($id);
         $contract->delete();
+        activity('contract')
+            ->performedOn($contract)
+            ->causedBy(auth()->user())
+            ->withProperties(['contract_id' => $contract->id])
+            ->log('Contract deleted by ' . auth()->user()->name);
         return redirect()->back();
-    }
-
-    public function impersonate($id)
-    {
-        $user=User::findOrFail($id);
-        \Auth::user()->impersonate($user);
-
-        return redirect()->back()->with("status", "User Impersonated.");
     }
 }

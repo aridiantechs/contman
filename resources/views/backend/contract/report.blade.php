@@ -242,7 +242,7 @@
                                                     <td>
                                                         <i class="fa fa-dollar-sign icon"></i>
                                                         <p>Contract value</p>
-                                                        <h6>{{ $contract->contract_value }}</h6>
+                                                        <h6> $ {{ $contract->contract_value }}</h6>
                                                     </td>
                                                 </tr>
                                             </tbody>
