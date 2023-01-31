@@ -156,6 +156,19 @@
                             <i class="anticon font-size-10 anticon-{{$alignreverse}}"></i>
                         </div>
                     </a> --}}
+                    <a href="{{route('backend.password.update')}}" class="dropdown-item d-block p-h-15 p-v-10">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <i class="anticon opacity-04 font-size-16 anticon-lock"></i>
+                                </div>
+                                <div class="col-auto">
+                                    <span class="">Update Password</span>
+                                </div>
+                            </div>
+                            <i class="anticon font-size-10 anticon-{{$alignreverse}}"></i>
+                        </div>
+                    </a>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"  class="dropdown-item d-block p-h-15 p-v-10">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="row">

@@ -47,6 +47,8 @@ Route::group([
 	'middleware' => ['auth','role:superadmin|employee'],
 ],function(){
 
+    Route::get('/password/update',[DashboardController::class, 'updatePassword'])->name('password.update');
+    Route::post('/password/update',[DashboardController::class, 'updatePassword'])->name('password.update');
     // View Permissions
     Route::group([
         'middleware' => ['role_or_permission:superadmin|View Data'],

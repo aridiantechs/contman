@@ -13,6 +13,7 @@ use App\Models\CompanyProfile;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
@@ -90,6 +91,40 @@ class DashboardController extends Controller
 		],400);
 		
   	}
+
+	public function updatePassword(Request $request)
+	{
+		if (request()->isMethod('get')) {
+			return view('backend.profile');
+			
+		} elseif (request()->isMethod('post')) {
+			$validator = Validator::make($request->all(),
+	            [
+	            	'old_pass' => 'required',
+	            	'password' => 'required|max:30|confirmed',
+	        	]
+	        );
+
+	        if ($validator->fails()) {
+	            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+	        }
+
+	        $user = User::find(auth()->user()->id);
+	        if(!Hash::check($request->old_pass, $user->password)){
+
+	        	return redirect()->back()
+	             		->with(['password_error' => "Old Password doesn't matched."]);
+
+	        }
+			
+			$user->password =  Hash::make($request->password);
+			$user->save();
+
+			return redirect()->back()->with('status','Password Updated Successfully.');
+		}
+	}
 
   	public function profile() 
   	{
