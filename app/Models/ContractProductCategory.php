@@ -20,6 +20,6 @@ class ContractProductCategory extends Model
 
     public function product_category()
     {
-        return $this->belongsTo('App\Models\Category','product_category');
+        return $this->belongsTo('App\Models\Category','product_category_id');
     }
 }

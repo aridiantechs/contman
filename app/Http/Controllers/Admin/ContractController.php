@@ -204,7 +204,7 @@ class ContractController extends Controller
         }
 
         $contract->save();
-        dd($request->all());
+        
         return redirect()->back()->with("status", "Contract has been Created.");
     }
 
@@ -216,7 +216,8 @@ class ContractController extends Controller
      */
     public function show($id)
     {
-        //
+        $contract=Contract::findOrFail($id);
+        return view('backend.contract.report',compact('contract'));
     }
 
     /**
@@ -275,7 +276,8 @@ class ContractController extends Controller
                 "element_delivery_time" => ['required', 'string'],
                 "element_quality" => ['required', 'string'],
                 "delivery_instructions" => ['required', 'string'],
-                "product_category" => ['required', 'integer'],
+                "product_category" => ['required', 'array'],
+                "product_category.*" => ['required', 'integer'],
                 "status_meeting" => ['required', 'string'],
                 "meeting_date" => ['required', 'date']
             ]);
@@ -312,12 +314,18 @@ class ContractController extends Controller
         $contract->element_delivery_time = $request->user_type== 'customer' ? $request->element_delivery_time : null;
         $contract->element_quality = $request->user_type== 'customer' ? $request->element_quality : null;
         $contract->delivery_instructions = $request->user_type== 'customer' ? $request->delivery_instructions : null;
-        $contract->product_category = $request->user_type== 'customer' ? $request->product_category : null;
         $contract->status_meeting = $request->user_type== 'customer' ? $request->status_meeting : null;
         $contract->meeting_date = $request->user_type== 'customer' ? $request->meeting_date : null;
         
         $contract->emp_id = auth()->user()->id;
         $contract->save();
+
+        $contract->product_categories()->delete();
+        foreach ($request->product_category as $key => $pc) {
+            ContractProductCategory::insert([
+                'contract_id'=>$contract->id, 'product_category_id'=> $pc
+            ]);
+        }
 
         if($request->hasFile('contract_file')) {
             if (is_array($request->contract_file)) {

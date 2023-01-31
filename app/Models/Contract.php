@@ -35,6 +35,11 @@ class Contract extends Model
     {
         return $this->belongsTo('App\Models\User','vendor_id');
     }
+    
+    public function media()
+    {
+        return $this->hasMany('App\Models\ContractMedia','contract_id');
+    }
 
     
     public function product_categories()

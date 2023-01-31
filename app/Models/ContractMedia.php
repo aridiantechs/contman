@@ -15,7 +15,7 @@ class ContractMedia extends Model
     
     public function getFileAttribute($value)
     {
-        return $value ? (url('/').'/public/storage/uploads/contract/' . $value) : "";
+        return $value ? (url('/').'/storage/uploads/contracts/' . $value) : "";
     }
 
     public function contract()

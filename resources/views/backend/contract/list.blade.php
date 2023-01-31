@@ -60,6 +60,10 @@
 			height: 90%;
 		}
     }
+
+    .fa, .fas{
+        line-height: unset !important;
+    }
 </style>
 @endsection
 
@@ -173,6 +177,10 @@
                                                         <a href="{{route('backend.contract.edit',$contract->id)}}" class="btn btn-success btn-tone ml-2 d-flex">
                                                             <i class="fas fa-edit "></i>
                                                             <span class="m-{{$alignShortRev}}-5">Edit</span>
+                                                        </a>
+                                                        <a href="{{route('backend.contract.show',$contract->id)}}" class="btn btn-info btn-tone ml-2 d-flex">
+                                                            <i class="fas fa-eye "></i>
+                                                            <span class="m-{{$alignShortRev}}-5">View</span>
                                                         </a>
 													</td>
 												</tr>

@@ -79,6 +79,7 @@ Route::group([
         Route::post('category', [CategoryController::class, 'store'])->name('category.store');
         Route::post('user', [UserController::class, 'store'])->name('user.store');
         Route::post('contract', [ContractController::class, 'store'])->name('contract.store');
+        Route::get('contract_print', [ContractController::class, 'print'])->name('contract.print');
     });
 
     // Update Permissions
