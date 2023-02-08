@@ -156,8 +156,8 @@
 													<td>{{ $contract->start_date ?? '' }}</td>
 													<td>{{ $contract->end_date ?? '' }}</td>
 													<td>{{ $contract->renewal_date ?? '' }}</td>
-													<td>{{ $contract->renewal_deadline_date ?? '' }}</td>
-													<td> $ {{$contract->contract_value ?? '' }}</td>
+													<td>{{ $contract->renewal_reminder_date ?? '' }}</td>
+													<td>{{danishFormat($contract->contract_value ?? '') }}</td>
 													<td class="d-flex">
                                                         {{-- <div class="dropdown dropdown-inline">
                                                             <button type="button" class="btn btn-default btn-icon btn-sm btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -478,7 +478,7 @@
 			
 		});
 
-		@if(request()->query())
+		@if(request()->query() && !request()->query('type'))
             openNav();
 		@endif
 		
@@ -488,6 +488,10 @@
                 search.set("search_text", $('#search_text').val());
                 var newSearch = search.toString();
                 window.history.pushState({}, "", `${location.pathname}?${newSearch}`);
+            }else{
+                var $url=$(this).closest('form').attr('action');
+                window.location.href= $url+'&search_text='+$('#search_text').val();
+                return ;
             }
             
             window.location.reload();

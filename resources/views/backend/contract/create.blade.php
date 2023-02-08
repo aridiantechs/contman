@@ -365,7 +365,7 @@
                             <label class="font-weight-semibold">Start Date</label>
                             <div class="input-affix m-b-10">
                                 <i class="prefix-icon anticon anticon-calendar"></i>
-                                <input type="date" class="form-control datepicker-input" name="start_date" placeholder="Start date" value="{{isset($contract) ? $contract->start_date : old('start_date')}}">
+                                <input type="date" class="form-control datepicker-input" name="start_date" placeholder="Start date" value="{{isset($contract) ? $contract->getAttributes()['start_date'] : old('start_date')}}">
                             </div>
                             @error('start_date')
                                 <span class="invalid-feedback" role="alert">
@@ -377,7 +377,7 @@
                             <label class="font-weight-semibold">End Date</label>
                             <div class="input-affix m-b-10">
                                 <i class="prefix-icon anticon anticon-calendar"></i>
-                                <input type="date" class="form-control datepicker-input" name="end_date" placeholder="End date" value="{{isset($contract) ? $contract->end_date : old('end_date')}}">
+                                <input type="date" class="form-control datepicker-input" name="end_date" placeholder="End date" value="{{isset($contract) ? $contract->getAttributes()['end_date'] : old('end_date')}}">
                             </div>
                             @error('end_date')
                                 <span class="invalid-feedback" role="alert">
@@ -386,11 +386,26 @@
                             @enderror
                         </div>
                         
-                        <div class="form-group col-md-4">
+                        {{-- <div class="form-group col-md-4">
                             <label class="font-weight-semibold">Date Renewal</label>
                             <div class="input-affix m-b-10">
                                 <i class="prefix-icon anticon anticon-calendar"></i>
                                 <input type="date" class="form-control datepicker-input" name="renewal_date" placeholder="Renewal date" value="{{isset($contract) ? $contract->renewal_date : old('renewal_date')}}">
+                            </div>
+                            @error('renewal_date')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div> --}}
+                        <div class="form-group col-md-4">
+                            <label class="font-weight-semibold">Renewal Interval</label>
+                            <div class="input-affix m-b-10">
+                                <select class="form-control" name="renewal_interval">
+                                    <option value="">Select..</option>
+                                    <option value="one_time" {{old('renewal_interval')=="one_time" ? 'selected' : ''}}>One Time</option>
+                                    <option value="unlimited" {{old('renewal_interval')=="unlimited" ? 'selected' : ''}}>Unlimited</option>
+                                </select>
                             </div>
                             @error('renewal_date')
                                 <span class="invalid-feedback" role="alert">
@@ -403,9 +418,9 @@
                             <label class="font-weight-semibold">Renewal Reminder</label>
                             <div class="input-affix m-b-10">
                                 <i class="prefix-icon anticon anticon-calendar"></i>
-                                <input type="date" class="form-control datepicker-input" name="renewal_deadline_date" placeholder="Renewal Deadline date" value="{{isset($contract) ? $contract->renewal_deadline_date : old('renewal_deadline_date')}}">
+                                <input type="date" class="form-control datepicker-input" name="renewal_reminder_date" placeholder="Renewal Deadline date" value="{{isset($contract) ? $contract->getAttributes()['renewal_reminder_date'] : old('renewal_reminder_date')}}">
                             </div>
-                            @error('renewal_deadline_date')
+                            @error('renewal_reminder_date')
                                 <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                                 </span>
@@ -615,44 +630,49 @@
 <script type="text/javascript">
    
    $(document).ready(function(){
+
+        $("[name='user_type']").on('change', function(){
+            console.log(32323);
+            if ($(this).val()=='customer') {
+                $('.cust__frag').show(); 
+                @if(!old('user_type'))
+                    $("[name='customer']").val(''); 
+                @else
+                    $("[name='customer']").trigger('change')
+                @endif
+                $("[name='salesperson_id']").empty();
+
+                $('.vend__frag').hide();
+            }else{
+                $('.vend__frag').show(); 
+                @if(!old('user_type'))
+                    $("[name='vendor']").val(''); 
+                @else
+                    $("[name='vendor']").trigger('change')
+                @endif
+                $("[name='purchaser_id']").empty();
+
+                $('.cust__frag').hide();
+            }
+        })
     // $("[name='delivery_instructions']").tagsinput();
         @if( old('user_type'))
-            $("[name='user_type']").trigger('change');
+            $("[name='user_type']:checked").trigger('change');
         @endif
 
         $("[name='product_category[]']").select2();
    })
 
-   $("[name='user_type']").on('change', function(){
-        if ($(this).val()=='customer') {
-            $('.cust__frag').show(); 
-            @if(!old('user_type'))
-                $("[name='customer']").val(''); 
-            @else
-                $("[name='customer']").trigger('change')
-            @endif
-            $("[name='salesperson_id']").empty();
-
-            $('.vend__frag').hide();
-        }else{
-            $('.vend__frag').show(); 
-            @if(!old('user_type'))
-                $("[name='vendor']").val(''); 
-            @else
-                $("[name='vendor']").trigger('change')
-            @endif
-            $("[name='purchaser_id']").empty();
-
-            $('.cust__frag').hide();
-        }
-   })
-
     $("[name='customer']").on('change', function(){
-        getOptions('customer',$("[name='customer']").val());
+        if ($(this).val()) {
+            getOptions('customer',$("[name='customer']").val());
+        }
     })
 
     $("[name='vendor']").on('change', function(){
-        getOptions('vendor',$("[name='vendor']").val());
+        if ($(this).val()) {
+            getOptions('vendor',$("[name='vendor']").val());
+        }
     })
 
    function getOptions(type, id){

@@ -11,6 +11,7 @@ class ContractMedia extends Model
     protected $fillable=[
         "contract_id",
         "file",
+        "orig_name"
     ];
     
     public function getFileAttribute($value)

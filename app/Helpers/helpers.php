@@ -74,6 +74,15 @@ if (!function_exists('getFullUrl'))
     }
 }
 
+if (!function_exists('danishFormat'))
+{
+    function danishFormat($number,$currency=false)
+    {
+        $fmt = new NumberFormatter( 'da_DK', NumberFormatter::CURRENCY );
+        return ($currency ? 'DKK ' : '') .$fmt->formatCurrency($number, "DKK");
+    }
+}
+
 if (!function_exists('return_if')) {
     /**
      * Appends passed value if condition is true

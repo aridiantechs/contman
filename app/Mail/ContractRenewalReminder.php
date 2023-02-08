@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PremiumInvoice extends Mailable implements ShouldQueue
+class ContractRenewalReminder extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -18,9 +18,9 @@ class PremiumInvoice extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($mail)
+    public function __construct($contractdata)
     {
-        $this->data = $mail;
+        $this->data = $contractdata;
     }
 
     /**
@@ -30,6 +30,6 @@ class PremiumInvoice extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('Kundkontkater Invoice')->markdown('emails.premium_invoice');
+        return $this->subject('Contract Renewal')->view('emails.renewal_reminder');
     }
 }

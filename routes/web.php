@@ -37,6 +37,27 @@ Route::get('/', function () {
     return redirect()->route('login');
 })->name('/');
 
+/* Route::get('replicate', function (Request $request){
+    $intervals = \App\Models\Contract::getReminderContracts();
+        foreach ($intervals as $key1 => $contracts) {
+            foreach ($contracts as $key2 => $contract) {
+                dd($key1);
+                $data=[
+                    'base_url' => url('/'),
+                    'contract'=>$contract,
+                    'remaining_time_period'=>$key
+                ];
+
+                try {
+                    $email = new ContractEndReminder($data);
+                    Mail::to($contract->emp->email)->send($email);
+                } catch (\Throwable $th) {
+                    
+                }
+            }
+        }
+}); */
+
 Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blogs');
 Route::get('/category/{slug}', [App\Http\Controllers\BlogController::class, 'byCategory'])->name('byCategory');
 Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');

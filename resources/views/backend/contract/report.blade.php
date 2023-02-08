@@ -132,10 +132,9 @@
     }
 
     .tags span{
-        background-color: #e31c79;
-        border: 1px solid #e31c79;
-        color: white;
-        border-radius: 13px;
+        font-size: 13px;
+        margin: 4px 0px;
+        white-space: nowrap;
     }
 </style>
 @endsection
@@ -233,8 +232,8 @@
                                                     </td>
                                                     <td>
                                                         <i class="pe-7s-date icon fa fa-calendar"></i>
-                                                        <p>Renewal Deadline Date</p>
-                                                        <h6>{{ $contract->renewal_deadline_date ?? ''}}
+                                                        <p>Renewal Reminder Date</p>
+                                                        <h6>{{ $contract->renewal_reminder_date ?? ''}}
                                                         </h6>
                                                     </td>
                                                 </tr>
@@ -242,7 +241,7 @@
                                                     <td>
                                                         <i class="fa fa-dollar-sign icon"></i>
                                                         <p>Contract value</p>
-                                                        <h6> $ {{ $contract->contract_value }}</h6>
+                                                        <h6>  {{ danishFormat($contract->contract_value) }}</h6>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -255,7 +254,10 @@
                                                 <h4 class="w-100">Contract files
                                                     <span class="float-right">
                                                         @foreach ($contract->media as $key => $media)
-                                                            <button class="btn btn-primary btn-sm media_btn" data-mediaID="{{$key+1}}">File-{{$key+1}}</button>
+                                                            <div class="btn-group mb-2">
+                                                                <button class="btn btn-primary btn-sm media_btn" data-mediaID="{{$key+1}}">{{ $media->orig_name }}</button>
+                                                                <button type="button" class="btn btn-sm open_external" data-iframesrc="{{$media->file}}"><i class="fas fa-external-link-alt"></i></button>
+                                                            </div>
                                                         @endforeach
                                                     </span>
                                                 </h4>
@@ -374,18 +376,11 @@
                                         </div>
                                         <div class="col-md-6 mt-3">
                                             <h3 class="b_bottom_light">Product Category</h3>
-                                            <table class="reports-info" width="100%" cellspacing="0" cellpadding="0"
-                                                border="0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="tags pl-1">
-                                                            @foreach ($contract->product_categories as $cats)
-                                                                <span class="p-2">{{ $cats->product_category->category_name ?? ''}}</span>
-                                                            @endforeach
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <div class="tags pl-1">
+                                                @foreach ($contract->product_categories as $cats)
+                                                    <span class="badge badge-pill badge-primary">{{ $cats->product_category->category_name ?? ''}}</span>
+                                                @endforeach
+                                            </div>
                                         </div>
                                         
                                         <div class="col-md-6 mt-3">
@@ -419,18 +414,11 @@
                                             @php
                                                 $delivery_instructions=explode(',',$contract->delivery_instructions);
                                             @endphp
-                                            <table class="reports-info" width="100%" cellspacing="0" cellpadding="0"
-                                                border="0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="tags pl-1">
-                                                            @foreach ($delivery_instructions as $inst)
-                                                                <span class="p-2">{{ $inst ?? ''}}</span>
-                                                            @endforeach
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <div class="tags pl-1">
+                                                @foreach ($delivery_instructions as $inst)
+                                                    <span class="badge badge-pill badge-primary">{{ $inst ?? ''}}</span>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                 @endif
@@ -453,6 +441,11 @@
             var media_id= $(this).attr('data-mediaid');
             $('.media_div').hide();
             $('.media_div[data-mediaid="'+media_id+'"]').show();
+        })
+
+        $('.open_external').on('click', function(){
+            var win = window.open();
+            win.document.write('<iframe style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" src="'+$(this).attr('data-iframesrc')+'" frameborder="0" allowfullscreen></iframe>')
         })
 	});
 

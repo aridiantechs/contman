@@ -24,6 +24,26 @@ class Contract extends Model
     {
         return LogOptions::defaults();
     }
+
+    public function getStartDateAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('d-m-Y');
+    }
+
+    public function getEndDateAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('d-m-Y');
+    }
+
+    public function getRenewalDateAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('d-m-Y');
+    }
+
+    public function getRenewalReminderDateAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('d-m-Y');
+    }
     
     public function customer()
     {
@@ -50,6 +70,10 @@ class Contract extends Model
         return $this->hasMany('App\Models\ContractMedia','contract_id');
     }
 
+    public function emp()
+    {
+        return $this->belongsTo('App\Models\User','emp_id');
+    }
     
     public function product_categories()
     {
@@ -83,5 +107,21 @@ class Contract extends Model
     public function ratingg()
     {
         return $this->hasOne('App\Models\Rating','order_id','order_id');
+    }
+
+    public static function getReminderContracts() {
+        $now = \Carbon\Carbon::now();
+        $threeMonthsFromNow = $now->copy()->addMonths(3)->format('Y-m-d');
+        $oneMonthFromNow = $now->copy()->addMonths(1)->format('Y-m-d');
+        $fifteenDaysFromNow = $now->copy()->addDays(15)->format('Y-m-d');
+        $sevenDaysFromNow = $now->copy()->addDays(7)->format('Y-m-d');
+        
+        $contracts=Contract::whereNull('status');
+        return $contracts_to_reminder= [
+            '7-days' => (clone $contracts)->whereDate('end_date', $sevenDaysFromNow)->get(),
+            '15-days' => (clone $contracts)->whereDate('end_date', $fifteenDaysFromNow)->get(),
+            '1-month' => (clone $contracts)->whereDate('end_date', $oneMonthFromNow)->get(),
+            '3-month' => (clone $contracts)->whereDate('end_date', $threeMonthsFromNow)->get(),
+        ];
     }
 }

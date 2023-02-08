@@ -45,7 +45,7 @@ class ContractController extends Controller
                     ->orWhere('start_date',$search)
                     ->orWhere('end_date',$search)
                     ->orWhere('renewal_date',$search)
-                    ->orWhere('renewal_deadline_date',$search)
+                    ->orWhere('renewal_reminder_date',$search)
                     ->orWhere('contract_value',$search)
                     ->orWhere('contract_type',$search)
                     ->orWhere('extension',$search)
@@ -107,11 +107,11 @@ class ContractController extends Controller
             "customer" => ['required_if:user_type,==,customer'],
             "vendor" => ['required_if:user_type,==,vendor'],
             "start_date" => ['required', 'date'],
-            "end_date" => ['required', 'date'],
-            "renewal_date" => ['required', 'date'],
-            "renewal_deadline_date" => ['required', 'date'],
+            "end_date" => ['required', 'date','after:start_date'],
+            "renewal_interval" => ['required', 'in:one_time,unlimited'],
+            "renewal_reminder_date" => ['required', 'date','after:start_date','before:end_date'],
             "contract_value" =>['required', 'integer'],
-            "contract_file" => ['required', 'array'],
+            "contract_file" => ['nullable', 'array'],
             "contract_file.*" => ['required', 'mimes:pdf'],
             "purchaser_id" => ['required_if:user_type,==,vendor'],
             "salesperson_id" => ['required_if:user_type,==,customer'],
@@ -153,8 +153,9 @@ class ContractController extends Controller
         $contract->association_id = $request->user_type== 'customer' ? $request->salesperson_id : $request->purchaser_id;
         $contract->start_date = $request->start_date;
         $contract->end_date = $request->end_date;
-        $contract->renewal_date = $request->renewal_date;
-        $contract->renewal_deadline_date = $request->renewal_deadline_date;
+        $contract->renewal_date = $request->end_date;
+        $contract->renewal_interval = $request->renewal_interval;
+        $contract->renewal_reminder_date = $request->renewal_reminder_date;
         $contract->contract_value = $request->contract_value;
 
         if ($request->user_type=='customer') {
@@ -188,6 +189,7 @@ class ContractController extends Controller
                     $contract_media=new ContractMedia;
                     $contract_media->contract_id = $contract->id;
                     $contract_media->file = custom_file_upload($file,CONTRACT_FILE_PATH);
+                    $contract_media->orig_name = $file->getClientOriginalName();
                     $contract_media->save();
                 }
             }else{
@@ -261,8 +263,8 @@ class ContractController extends Controller
             "vendor" => ['required_if:user_type,==,vendor'],
             "start_date" => ['required', 'date'],
             "end_date" => ['required', 'date'],
-            "renewal_date" => ['required', 'date'],
-            "renewal_deadline_date" => ['required', 'date'],
+            "renewal_interval" => ['required', 'in:one_time,unlimited'],
+            "renewal_reminder_date" => ['required', 'date'],
             "contract_value" =>['required', 'integer'],
             "contract_file" => ['nullable', 'array'],
             "contract_file.*" => ['required', 'mimes:pdf'],
@@ -305,8 +307,9 @@ class ContractController extends Controller
         $contract->association_id = $request->user_type== 'customer' ? $request->salesperson_id : $request->purchaser_id;
         $contract->start_date = $request->start_date;
         $contract->end_date = $request->end_date;
-        $contract->renewal_date = $request->renewal_date;
-        $contract->renewal_deadline_date = $request->renewal_deadline_date;
+        $contract->renewal_date = $request->end_date;
+        $contract->renewal_interval = $request->renewal_interval;
+        $contract->renewal_reminder_date = $request->renewal_reminder_date;
         $contract->contract_value = $request->contract_value;
 
         
@@ -341,6 +344,7 @@ class ContractController extends Controller
                     $contract_media=new ContractMedia;
                     $contract_media->contract_id = $contract->id;
                     $contract_media->file = custom_file_upload($file,CONTRACT_FILE_PATH);
+                    $contract_media->orig_name = $file->getClientOriginalName();
                     $contract_media->save();
                 }
             }else{

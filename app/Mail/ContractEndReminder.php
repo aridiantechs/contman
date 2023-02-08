@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ContactCheckout extends Mailable implements ShouldQueue
+class ContractEndReminder extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -18,8 +18,9 @@ class ContactCheckout extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($contractdata)
     {
+        $this->data = $contractdata;
     }
 
     /**
@@ -29,6 +30,6 @@ class ContactCheckout extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('Tack för att du kontaktar oss')->markdown('emails.contact_checkout');
+        return $this->subject('Contract End Reminder')->view('emails.contract_end_reminder');
     }
 }

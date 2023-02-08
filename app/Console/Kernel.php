@@ -2,7 +2,9 @@
 
 namespace App\Console;
 
-use App\Jobs\ChargePremiumUserJob;
+use App\Jobs\ContractRenewJob;
+use App\Jobs\ContractReminderJob;
+use App\Jobs\ContractEndReminderJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -25,8 +27,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $contracts=\App\Models\Contract::whereDate('end_date','=',\Carbon\Carbon::now()->format('Y-m-d'))->whereNull('status')->orderBy('end_date','asc')->get();
         // $schedule->command('inspire')->hourly();
-        $schedule->job(new ChargePremiumUserJob)->monthlyOn(1, '05:00')->withoutOverlapping(15);
+        $schedule->job(new ContractRenewJob)->everyMinute()->withoutOverlapping();
+        $schedule->job(new ContractEndReminderJob)->everyMinute()->withoutOverlapping();
+        // $schedule->job(new ChargePremiumUserJob)->monthlyOn(1, '05:00')->withoutOverlapping(15);
     }
 
     /**

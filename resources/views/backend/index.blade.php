@@ -25,7 +25,7 @@
                                     <p class="m-b-0 text-muted">Revenue</p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <i class="fas fa-money-bill stats-icon"></i>
-                                        <h2 class="m-b-0 stats-val">USD{{$data['revenue'] ?? ''}}</h2>
+                                        <h2 class="m-b-0 stats-val">{{danishFormat($data['revenue'] ?? '')}}</h2>
                                     </div>
                                     {{-- <span class="badge badge-pill badge-cyan font-size-12">
                                         <i class="anticon anticon-arrow-up"></i>
@@ -134,7 +134,7 @@
                             </div>
                         </div>
                         <div class="m-t-50">
-                            <canvas class="chart" style="height: 205px" id="sales-chart"></canvas>
+                            <canvas class="chart" style="height: 205px" id="sales_chart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                                 <div class="p{{$alignShort}}-4 m-v-10 border-hide-md">
                                     <p class="m-b-0">Net Revenue</p>
                                     <h3 class="m-b-0">
-                                        <span>USD{{$data['revenue'] ?? ''}}</span>
+                                        <span>{{danishFormat($data['revenue'] ?? '')}}</span>
                                     </h3>
                                 </div>
                                 {{-- <div class="px-md-4 m-v-10">
@@ -279,8 +279,8 @@
                                                 <td>{{ $contract->start_date ?? '' }}</td>
                                                 <td>{{ $contract->end_date ?? '' }}</td>
                                                 <td>{{ $contract->renewal_date ?? '' }}</td>
-                                                <td>{{ $contract->renewal_deadline_date ?? '' }}</td>
-                                                <td>{{ $contract->contract_value ?? '' }}</td>
+                                                <td>{{ $contract->renewal_reminder_date ?? '' }}</td>
+                                                <td>{{ danishFormat($contract->contract_value ?? '') }}</td>
                                                 
                                             </tr>
                                         @endforeach
@@ -337,7 +337,7 @@
             data: {
                 labels: {!!$graph->pluck('months')!!},
                 datasets: [{
-                    label: 'Orders',
+                    label: 'Revenue',
                     backgroundColor: colors.transparent,
                     borderColor: colors.blue,
                     pointBackgroundColor: colors.blue,
@@ -395,6 +395,76 @@
                     enabled: true,
                     mode: 'xy', // or 'x' for "drag" version
                 },
+            }
+        });
+
+        const salesChart = document.getElementById("sales_chart");
+        const salesChartCtx = salesChart.getContext('2d');
+        salesChart.height = 120;
+        const salesChartConfig = new Chart(salesChartCtx, {
+            type: 'bar',
+            data: {
+            labels: [ 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+            datasets: [{
+                label: 'Online',
+                backgroundColor: colors.blue,
+                borderWidth: 0,
+                data: [ 20, 30, 35, 45, 55, 45]
+            },
+            {
+                label: 'Offline',
+                backgroundColor: colors.blueLight,
+                borderWidth: 0,
+                data: [ 25, 35, 40, 50, 60, 50]
+                }]
+            },
+            options: {
+                scaleShowVerticalLines: false,
+                responsive: true,
+                legend: {
+					display: false
+				},
+                scales: {
+                    xAxes: [{
+                        categoryPercentage: 0.35,
+                        barPercentage: 0.70,
+                        display: true,
+                        scaleLabel: {
+                            display: false,
+                            labelString: 'Month'
+                        },
+                        gridLines: false,
+                        ticks: {
+                            display: true,
+                            beginAtZero: true,
+                            fontSize: 13,
+                            padding: 10
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: false,
+                            labelString: 'Value'
+                        },
+                        gridLines: {
+                            drawBorder: false,
+                            offsetGridLines: false,
+                            drawTicks: false,
+                            borderDash: [3, 4],
+                            zeroLineWidth: 1,
+                            zeroLineBorderDash: [3, 4]
+                        },
+                        ticks: {
+                            max: 80,                            
+                            stepSize: 20,
+                            display: true,
+                            beginAtZero: true,
+                            fontSize: 13,
+                            padding: 10
+                        }
+                    }]
+                }
             }
         });
     })
