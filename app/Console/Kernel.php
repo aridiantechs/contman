@@ -27,7 +27,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $contracts=\App\Models\Contract::whereDate('end_date','=',\Carbon\Carbon::now()->format('Y-m-d'))->whereNull('status')->orderBy('end_date','asc')->get();
         // $schedule->command('inspire')->hourly();
         $schedule->job(new ContractRenewJob)->everyMinute()->withoutOverlapping();
         $schedule->job(new ContractEndReminderJob)->everyMinute()->withoutOverlapping();
