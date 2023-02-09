@@ -39,6 +39,15 @@
                     display: none;
                 }
             }
+
+            .anticon{
+                line-height: unset !important;
+            }
+
+            .ft-size-17{
+                font-size: 17px !important;
+                line-height: 1.2 !important;
+            }
         </style>
     </head>
     <!-- end::Head -->

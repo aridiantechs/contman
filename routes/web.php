@@ -122,6 +122,11 @@ Route::group([
         Route::delete('contract/{id}', [ContractController::class, 'destroy'])->name('contract.destroy');
     });
     
+    
+    Route::resource('/notification', "App\Http\Controllers\Admin\NotificationController");
+    Route::get('/view_notifications', 'App\Http\Controllers\Admin\NotificationController@view')->name("view_notifications");
+    Route::get('/mark_notifications', 'App\Http\Controllers\Admin\NotificationController@markNotifications')->name("mark_notifications");
+
     Route::get('/options',[DashboardController::class, 'options'])->name('options');
     //deactive coupon
     Route::get('coupon/deactive/{id}', [CouponController::class, 'deactive'])->name('coupon.deactive');
@@ -131,31 +136,8 @@ Route::group([
     Route::get('/company/create',[CompanyController::class, 'create'])->name('company.create');
     Route::post('/company/store',[CompanyController::class, 'store'])->name('company.store');
     Route::delete('/company/{id}',[CompanyController::class, 'destroy'])->name('company.destroy');
-    
-    Route::get('company/{id}', [CompanyController::class, 'show'])->name('company.show');
-    Route::get('company/{id}/edit', [CompanyController::class, 'edit'])->name('company.edit');
-    Route::put('company/{id}/edit', [CompanyController::class, 'edit'])->name('company.edit');
-    Route::get('/company/{id}/services',[CompanyController::class, 'services'])->name('company.services');
-    Route::post('/company/{id}/services',[CompanyController::class, 'services'])->name('company.services');
-    Route::get('/company/{id}/employees',[CompanyController::class, 'employees'])->name('company.employees');
-    Route::post('/company/{id}/employees',[CompanyController::class, 'employees'])->name('company.employees');
-    // update routes for company employee
-    Route::get('/company/{id}/employee/{emp_id}',[CompanyController::class, 'updateEmployee'])->name('company.updateEmployee');
-    Route::put('/company/{id}/employee/{emp_id}',[CompanyController::class, 'updateEmployee'])->name('company.updateEmployee');
-    // update routes for company service
-    Route::get('/company/{id}/service/{service_id}',[CompanyController::class, 'updateService'])->name('company.updateService');
-    Route::put('/company/{id}/service/{service_id}',[CompanyController::class, 'updateService'])->name('company.updateService');
-    //delete route for company employee
-    Route::delete('/company/{id}/employees/{emp_id}',[CompanyController::class, 'deleteEmployee'])->name('company.deleteEmployee');
-    //delete route for company service
-    Route::delete('/company/{id}/services/{service_id}',[CompanyController::class, 'deleteService'])->name('company.deleteService');
 
-    Route::resource('banner', BannerController::class);
     Route::get('/user_status', [App\Http\Controllers\Admin\UserController::class, 'updateStatus'])->name('user.updateStatus');
-
-    // nationality crud routes
-    Route::get('/nationality',[NationalityController::class, 'index'])->name('nationality.index');
-
 
     // Route::resource('company', CompanyController::class);
     

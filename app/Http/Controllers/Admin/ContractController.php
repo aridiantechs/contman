@@ -206,7 +206,19 @@ class ContractController extends Controller
         }
 
         $contract->save();
+
+        // Create Notification
+        createNotification(
+            "contract",
+            $contract->emp_id,
+            "Contract Created",
+            "A new Contract has been created bearing id ".$contract->order_id,
+            [
+                "contract_id" => $contract->id,
+            ]
+        );
         
+        // Create log
         activity('contract')
             ->performedOn($contract)
             ->causedBy(auth()->user())
@@ -362,6 +374,18 @@ class ContractController extends Controller
 
         $contract->save();
 
+        // Create Notification
+        createNotification(
+            "contract",
+            $contract->emp_id,
+            "Contract Created",
+            "Contract #".$contract->order_id." has been updated",
+            [
+                "contract_id" => $contract->id,
+            ]
+        );
+
+        // Create Log
         activity('contract')
             ->performedOn($contract)
             ->causedBy(auth()->user())
@@ -380,12 +404,26 @@ class ContractController extends Controller
     public function destroy($id)
     {
         $contract=Contract::findOrFail($id);
-        $contract->delete();
+
+        // Create Notification
+         createNotification(
+            "contract",
+            $contract->emp_id,
+            "Contract Deleted",
+            "Contract #".$contract->order_id." has been Deleted",
+            [
+                "contract_id" => $contract->id,
+            ]
+        );
+
+        // Create Log
         activity('contract')
             ->performedOn($contract)
             ->causedBy(auth()->user())
             ->withProperties(['contract_id' => $contract->id])
             ->log('Contract deleted by ' . auth()->user()->name);
+            
+        $contract->delete();
         return redirect()->back();
     }
 }

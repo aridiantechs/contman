@@ -32,51 +32,68 @@ class ContractRenewJob implements ShouldQueue
      */
     public function handle()
     {
-        $contracts=\App\Models\Contract::whereDate('end_date','=',\Carbon\Carbon::now()->format('Y-m-d'))->whereNull('status')->orderBy('end_date','asc')->get();
+        $contracts=\App\Models\Contract::whereDate('end_date','=',\Carbon\Carbon::now()->format('Y-m-d'))
+                                        ->whereNull('status')
+                                        ->where(function($q){
+                                            $q->whereIn('renewal_interval',['one_time','unlimited']);
+                                        })
+                                        ->orderBy('end_date','asc')->get();
     
         foreach ($contracts as $key => $contract) {
-            $new_contract = $contract->replicate();
-            $contract->status='COMPLETED';
-            $contract->save();
+            if($contract->renewal_interval=='unlimited' || ($contract->renewal_interval=='one_time' && !$contract->renew_contracts->count()) ){
+                $new_contract = $contract->replicate();
+                $contract->status='COMPLETED';
+                $contract->save();
 
-            $new_contract->order_id = uniqid();
-            $new_contract->start_date = $contract->getAttributes()['end_date'];
-            $new_contract->end_date = \Carbon\Carbon::parse($contract->end_date)->addDays(\Carbon\Carbon::parse($contract->start_date)->diffInDays($contract->end_date));
-            $new_contract->renewal_date =  $new_contract->getAttributes()['end_date'];
-            $new_contract->renewal_reminder_date = \Carbon\Carbon::parse($new_contract->end_date)->subDays(\Carbon\Carbon::parse($contract->end_date)->diffInDays($contract->renewal_reminder_date));
-            $new_contract->status = null;
-            $new_contract->renew_from =$contract->id;
-            $new_contract->save();
+                $new_contract->order_id = uniqid();
+                $new_contract->start_date = $contract->getAttributes()['end_date'];
+                $new_contract->end_date = \Carbon\Carbon::parse($contract->end_date)->addDays(\Carbon\Carbon::parse($contract->start_date)->diffInDays($contract->end_date));
+                $new_contract->renewal_date =  $new_contract->getAttributes()['end_date'];
+                $new_contract->renewal_reminder_date = \Carbon\Carbon::parse($new_contract->end_date)->subDays(\Carbon\Carbon::parse($contract->end_date)->diffInDays($contract->renewal_reminder_date));
+                $new_contract->status = null;
+                $new_contract->renew_from =$contract->id;
+                $new_contract->save();
 
-            // replicate media
-            foreach($contract->media as $med)
-            {
-                $new_contract->media()->create([
-                    "contract_id" => $new_contract->id,
-                    "file" => $med->file,
-                    "orig_name" => $med->orig_name
-                ]);
-            }
-            
-            // replicate categories
-            foreach($contract->product_categories as $cat)
-            {
-                $new_contract->product_categories()->create([
-                    "contract_id" => $new_contract->id,
-                    "product_category_id" => $cat->product_category_id,
-                ]);
-            }
-
-            $data=[
-                'base_url' => url('/'),
-                'contract'=>$contract,
-            ];
-
-            try {
-                $email = new ContractRenewalReminder($data);
-                Mail::to($contract->emp->email)->send($email);
-            } catch (\Throwable $th) {
+                // replicate media
+                foreach($contract->media as $med)
+                {
+                    $new_contract->media()->create([
+                        "contract_id" => $new_contract->id,
+                        "file" => $med->file,
+                        "orig_name" => $med->orig_name
+                    ]);
+                }
                 
+                // replicate categories
+                foreach($contract->product_categories as $cat)
+                {
+                    $new_contract->product_categories()->create([
+                        "contract_id" => $new_contract->id,
+                        "product_category_id" => $cat->product_category_id,
+                    ]);
+                }
+
+                createNotification(
+                    "contract",
+                    $new_contract->emp_id,
+                    "Contract Renewed",
+                    "Contract #".$new_contract->order_id." has been renewed",
+                    [
+                        "contract_id" => $new_contract->id,
+                    ]
+                );
+
+                $data=[
+                    'base_url' => url('/'),
+                    'contract'=>$contract,
+                ];
+
+                try {
+                    $email = new ContractRenewalReminder($data);
+                    Mail::to($contract->emp->email)->send($email);
+                } catch (\Throwable $th) {
+                    
+                }
             }
         }
         

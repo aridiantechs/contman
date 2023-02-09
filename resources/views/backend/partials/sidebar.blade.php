@@ -86,6 +86,14 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item {{\Route::is('backend.view_notifications') ? 'active' :''}}">
+                <a href="{{route('backend.view_notifications')}}">
+                    <span class="icon-holder">
+                        <i class="fas fa-bell"></i>
+                    </span>
+                    <span class="title">Notifications </span>
+                </a>
+            </li>
             
            {{-- <li class="nav-item {{\Route::is('backend.blog.index') ? 'active' :''}}">
                 <a href="{{route('backend.blog.index')}}">

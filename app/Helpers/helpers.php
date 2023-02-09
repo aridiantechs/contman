@@ -1,12 +1,13 @@
 <?php
 
-use Carbon\Carbon;
 use App\Content;
-use App\Language;
 use App\Currency;
+use App\Language;
+use Carbon\Carbon;
+use Illuminate\Http\File;
+use App\Models\Notification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage; 
-use Illuminate\Http\File;
 
 /**
  * Created by PhpStorm.
@@ -80,6 +81,22 @@ if (!function_exists('danishFormat'))
     {
         $fmt = new NumberFormatter( 'da_DK', NumberFormatter::CURRENCY );
         return ($currency ? 'DKK ' : '') .$fmt->formatCurrency($number, "DKK");
+    }
+}
+
+if(!function_exists('createNotification'))
+{
+    function createNotification($type,$to_user,$title,$body,$object=null)
+    {
+        // Add in notification
+        $noti = new Notification;
+        $noti->type=$type;
+        $noti->to_user_id = $to_user;
+
+        $noti->title = $title;
+        $noti->body = $body;
+        $noti->object = $object;
+        $noti->save();
     }
 }
 

@@ -109,6 +109,11 @@ class Contract extends Model
         return $this->hasOne('App\Models\Rating','order_id','order_id');
     }
 
+    public function renew_contracts()
+    {
+        return $this->hasMany('App\Models\Contract','renew_from');
+    }
+
     public static function getReminderContracts() {
         $now = \Carbon\Carbon::now();
         $threeMonthsFromNow = $now->copy()->addMonths(3)->format('Y-m-d');

@@ -57,7 +57,7 @@
                             <i class="anticon anticon-bell"></i>
                             <span class="m-{{$alignShortRev}}-10">Notification</span>
                         </p>
-                        <a class="btn-sm btn-default btn" href="javascript:void(0);">
+                        <a class="btn-sm btn-default btn" href="{{route('backend.view_notifications')}}">
                             <small>View All</small>
                         </a>
                     </div>
@@ -109,19 +109,23 @@
                             </a>
                         </div>
                     </div>
+                    
+                    <div class="p-v-15 p-h-25 border-top d-flex justify-content-center align-items-center"><a href="{{route('backend.mark_notifications')}}">mark as read</a></div>
                 </div>
             </li>
             <li class="dropdown dropdown-animated scale-left">
                 <div class="pointer" data-toggle="dropdown">
                     <div class="avatar avatar-image  m-h-10 m-r-15">
-                        <img src="{{asset('backend/assets/images/avatars/user.jpg')}}" alt="">
+                        {{-- <img src="{{asset('backend/assets/images/avatars/user.jpg')}}" alt=""> --}}
+                        <i class="fa fa-user text-primary"></i>
                     </div>
                 </div>
                 <div class="p-b-15 p-t-20 dropdown-menu pop-profile">
                     <div class="p-h-20 p-b-15 m-b-10 border-bottom">
                         <div class="d-flex">
                             <div class="avatar avatar-lg avatar-image">
-                                <img src="{{asset('backend/assets/images/avatars/user.jpg')}}" alt="">
+                                {{-- <img src="{{asset('backend/assets/images/avatars/user.jpg')}}" alt=""> --}}
+                                <i class="fa fa-user text-primary"></i>
                             </div>
                             <div class="m-{{$alignShortRev}}-10">
                                 <p class="m-b-0 text-dark font-weight-semibold">{{auth()->user()->name}}</p>
@@ -160,7 +164,7 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="row">
                                 <div class="col-auto">
-                                    <i class="anticon opacity-04 font-size-16 anticon-lock"></i>
+                                    <i class="anticon opacity-04 ft-size-17 anticon-lock"></i>
                                 </div>
                                 <div class="col-auto">
                                     <span class="">Update Password</span>
@@ -173,7 +177,7 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="row">
                                 <div class="col-auto">
-                                    <i class="anticon opacity-04 font-size-16 anticon-logout"></i>
+                                    <i class="anticon opacity-04 ft-size-17 anticon-logout"></i>
                                 </div>
                                 <div class="col-auto">
                                     <span class="">Logout</span>
