@@ -132,7 +132,7 @@ class ContractController extends Controller
                 "product_category" => ['required', 'array'],
                 "product_category.*" => ['required', 'integer'],
                 "status_meeting" => ['required', 'string'],
-                "meeting_date" => ['required', 'date']
+                "meeting_date" => ['required', 'date','after:start_date','before:end_date']
             ]);
         }
         
@@ -274,9 +274,9 @@ class ContractController extends Controller
             "customer" => ['required_if:user_type,==,customer'],
             "vendor" => ['required_if:user_type,==,vendor'],
             "start_date" => ['required', 'date'],
-            "end_date" => ['required', 'date'],
+            "end_date" => ['required', 'date','after:start_date'],
             "renewal_interval" => ['required', 'in:one_time,unlimited'],
-            "renewal_reminder_date" => ['required', 'date'],
+            "renewal_reminder_date" => ['required', 'date','after:start_date','before:end_date'],
             "contract_value" =>['required', 'integer'],
             "contract_file" => ['nullable', 'array'],
             "contract_file.*" => ['required', 'mimes:pdf'],
@@ -299,7 +299,7 @@ class ContractController extends Controller
                 "product_category" => ['required', 'array'],
                 "product_category.*" => ['required', 'integer'],
                 "status_meeting" => ['required', 'string'],
-                "meeting_date" => ['required', 'date']
+                "meeting_date" => ['required', 'date','after:start_date','before:end_date']
             ]);
         }
         
