@@ -24,5 +24,12 @@
         @if(session()->has('status'))
             toastr.success('{{ session('status') }}')
         @endif
+
+        $.ajax({
+            url: '{{ route('backend.notification.index') }}',
+            success: function(html){
+                $("#notify_div").append(html);
+            }
+        });
     });
 </script>

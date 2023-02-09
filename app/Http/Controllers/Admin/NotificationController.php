@@ -19,14 +19,17 @@ class NotificationController extends Controller
     {   
         $all_notify = Notification::when(!auth()->user()->hasRole('superadmin'),function($q){
             $q->where('to_user_id',auth()->user()->id);
-        })/* ->where('seen',0) */->latest()->limit(10)->get();
+        })->where('seen',0)->latest()->limit(10)->get();
 
         return view('backend.partials.notification',compact('all_notify'));
     }
 
     public function markNotifications()
     {
-        $all_notify = Notification::where('to_user_id',auth()->user()->id)->update(array('seen'=>1));;
+        $all_notify = Notification::when(!auth()->user()->hasRole('superadmin'),function($q){
+            $q->where('to_user_id',auth()->user()->id);
+        })->update(array('seen'=>1));
+
         return redirect()->back();
     }
 
