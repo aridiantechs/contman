@@ -33,10 +33,11 @@
                 </div>
                 <div class="col-md-6">
                     <div class="text-md-{{$alignreverse}} m-v-10">
-                        
-                        <a href="{{route('backend.user.create')}}" class="btn btn-primary m-{{$alignShortRev}}-15">
-                            <span>Add new user</span>
-                        </a>
+                        @if (hasPermission('Add Data'))
+                            <a href="{{route('backend.user.create')}}" class="btn btn-primary m-{{$alignShortRev}}-15">
+                                <span>Add new user</span>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -57,7 +58,7 @@
 											   <th>Email</th>
 											   <th>Role</th>
 											   {{-- <th>Active</th> --}}
-											   @if (auth()->user()->hasRole('superadmin') ||auth()->user()->hasAnyPermission(['edit-data', 'delete-data', 'add-data']))
+											   @if (hasPermission('View Data') || hasPermission('Update Data') || hasPermission('Delete Data'))
 											   <th>Operation</th>
 											   @endif
 											</tr>
@@ -88,15 +89,19 @@
                                                                 @endif
                                                             </div>
                                                         </div> --}}
-                                                        
-                                                        @include('backend.components.delete',[
-                                                            'data' => $user->id, 
-                                                            'route' =>route('backend.user.destroy',$user->id), 
-                                                        ])
-                                                        <a href="{{route('backend.user.edit',$user->id)}}" class="btn btn-success btn-tone">
-                                                            <i class="fas fa-edit "></i>
-                                                            <span class="m-{{$alignShortRev}}-5">Edit</span>
-                                                        </a>
+                                                        @if (hasPermission('Delete Data'))
+                                                            @include('backend.components.delete',[
+                                                                'data' => $user->id, 
+                                                                'route' =>route('backend.user.destroy',$user->id), 
+                                                            ])
+                                                        @endif
+
+                                                        @if (hasPermission('Update Data'))
+                                                            <a href="{{route('backend.user.edit',$user->id)}}" class="btn btn-success btn-tone">
+                                                                <i class="fas fa-edit "></i>
+                                                                <span class="m-{{$alignShortRev}}-5">Edit</span>
+                                                            </a>
+                                                        @endif
 													</td>
 												</tr>
 											@endforeach

@@ -96,10 +96,11 @@
                 </div>
                 <div class="col-md-6">
                     <div class="text-md-{{$alignreverse}} m-v-10">
-                        
-                        <a href="{{route('backend.contract.create')}}" class="btn btn-primary m-{{$alignShortRev}}-15">
-                            <span>Add new contract</span>
-                        </a>
+                        @if (hasPermission('Add Data'))
+                            <a href="{{route('backend.contract.create')}}" class="btn btn-primary m-{{$alignShortRev}}-15">
+                                <span>Add new contract</span>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -142,8 +143,8 @@
 											   <th>Renewal Deadline date</th>
 											   <th>Contract value</th>
 											   {{-- <th>Active</th> --}}
-											   @if (auth()->user()->hasRole('superadmin') ||auth()->user()->hasAnyPermission(['edit-data', 'delete-data', 'add-data']))
-											   <th>Operation</th>
+											   @if (hasPermission('View Data') || hasPermission('Update Data') || hasPermission('Delete Data'))
+											        <th>Operation</th>
 											   @endif
 											</tr>
 										</thead>
@@ -169,19 +170,25 @@
                                                                 @endif
                                                             </div>
                                                         </div> --}}
+                                                        @if (hasPermission('Delete Data'))
+                                                            @include('backend.components.delete',[
+                                                                'data' => $contract->id, 
+                                                                'route' =>route('backend.contract.destroy',$contract->id), 
+                                                            ])
+                                                        @endif
+                                                        @if (hasPermission('Update Data'))
+                                                            <a href="{{route('backend.contract.edit',$contract->order_id)}}" class="btn btn-success btn-tone ml-2 d-flex">
+                                                                <i class="fas fa-edit "></i>
+                                                                <span class="m-{{$alignShortRev}}-5">Edit</span>
+                                                            </a>
+                                                        @endif
+                                                        @if (hasPermission('View Data'))
+                                                            <a href="{{route('backend.contract.show',$contract->order_id)}}" class="btn btn-info btn-tone ml-2 d-flex">
+                                                                <i class="fas fa-eye "></i>
+                                                                <span class="m-{{$alignShortRev}}-5">View</span>
+                                                            </a>
+                                                        @endif
                                                         
-                                                        @include('backend.components.delete',[
-                                                            'data' => $contract->id, 
-                                                            'route' =>route('backend.contract.destroy',$contract->id), 
-                                                        ])
-                                                        <a href="{{route('backend.contract.edit',$contract->order_id)}}" class="btn btn-success btn-tone ml-2 d-flex">
-                                                            <i class="fas fa-edit "></i>
-                                                            <span class="m-{{$alignShortRev}}-5">Edit</span>
-                                                        </a>
-                                                        <a href="{{route('backend.contract.show',$contract->order_id)}}" class="btn btn-info btn-tone ml-2 d-flex">
-                                                            <i class="fas fa-eye "></i>
-                                                            <span class="m-{{$alignShortRev}}-5">View</span>
-                                                        </a>
 													</td>
 												</tr>
 											@endforeach

@@ -100,6 +100,19 @@ if(!function_exists('createNotification'))
     }
 }
 
+if(!function_exists('hasPermission'))
+{
+    function hasPermission($type)
+    {
+        if(auth()->user()->hasRole('superadmin') || auth()->user()->hasPermissionTo($type))
+        {
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+
 if (!function_exists('return_if')) {
     /**
      * Appends passed value if condition is true

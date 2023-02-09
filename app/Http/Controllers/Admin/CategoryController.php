@@ -164,7 +164,7 @@ class CategoryController extends Controller
             activity('category')
                 ->performedOn($cat)
                 ->causedBy(auth()->user())
-                ->withProperties(['category_id' => $category->id])
+                ->withProperties(['category_id' => $cat->id])
                 ->log('Category updated by ' . auth()->user()->name);
         }
        

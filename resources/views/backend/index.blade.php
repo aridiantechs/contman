@@ -4,7 +4,7 @@
 <style>
     .stats-icon{
         font-size: 27px;
-        color: #3b3b88;
+        color: #66554b;
     }
 
     .stats-val{

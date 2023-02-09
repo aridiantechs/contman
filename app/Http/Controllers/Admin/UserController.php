@@ -196,6 +196,7 @@ class UserController extends Controller
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|string',
             'password'  => 'string|nullable',
+            'profile_image'=>'nullable|image|max:5000',
             'role' => 'string|exists:roles,name',
             'salesperson' => ['required_if:role,==,customer','array'],
             'salesperson.*' => ['exists:users,id'],

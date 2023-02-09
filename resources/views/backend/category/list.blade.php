@@ -28,11 +28,11 @@
             <h2>Categories</h2>
 
             <div class="row m-v-30">
-                {{-- @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasPermissionTo('add-data')) --}}
+                @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasPermissionTo('Add Data'))
                     <div class="col-md-12 mt-1">
                         <button  class="btn btn-primary" type="button" data-toggle="modal" data-target="#categoryModal">Create Category</button>
                     </div>
-                {{-- @endif --}}
+                @endif
             </div>
             <div class="table-responsive">
                 <table class="table table-hover e-commerce-table">
@@ -41,7 +41,9 @@
                             <th>#</th>
                             <th>Category name</th>
                             <th>Type</th>
-                            <th>Actions</th>
+                            @if (auth()->user()->hasRole('superadmin') ||auth()->user()->hasAnyPermission(['Update Data', 'Delete Data']))
+                                <th>Actions</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -51,28 +53,28 @@
                                 <td>{{ $cat->category_name ?? '' }}</td>
                                 <td>{{ $cat->category_type ?? '' }}</td>
                                 <td>
-                                    {{-- @if (auth()->user()->hasRole('superadmin') ||auth()->user()->hasAnyPermission(['edit-data', 'delete-data', 'add-data'])) --}}
+                                    @if (auth()->user()->hasRole('superadmin') ||auth()->user()->hasAnyPermission(['Update Data', 'Delete Data']))
                                     <span class="dropdown">
                                         <a href="#" class="btn btn-sm" data-toggle="dropdown" aria-expanded="true">
                                           <i class="fa fa-ellipsis-h"></i>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            {{-- @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasPermissionTo('edit-data')) --}}
+                                            @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasPermissionTo('Update Data'))
                                                 <a class="dropdown-item edit_category" data-cat-id="{{$cat->id}}" href="{{route('backend.category.edit',$cat->id)}}"><i class="fa fa-edit"></i> update</a>
-                                            {{-- @endif --}}
+                                            @endif
                                             {{-- <a class="dropdown-cat" href="#" name="update_status" data-userid="{{$user->id}}"  data-toggle="modal" data-target="#kt_modal_status"><i class="la la-leaf" data-toggle="modal" data-target="#kt_modal_status"></i> Update Status</a> --}}
-                                            {{-- @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasPermissionTo('delete-data')) --}}
+                                            @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasPermissionTo('Delete Data'))
                                                 <form id="delete_form_{{$cat->id ?? ''}}" method="POST" action="{{ route('backend.category.destroy', $cat->id) }}">
                                                     @csrf
                                                     {{ method_field('DELETE') }}
                                                     <button title="Delete record" onclick="deleteConfirm(null,'{{$cat->id}}')" type="button" class="dropdown-item"><i class="far fa-trash-alt mr-2"></i> Delete</button>
                                                 </form>
-                                            {{-- @endif --}}
+                                            @endif
                                             
     
                                         </div>
                                     </span>
-                                    {{-- @endif --}}
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

@@ -70,6 +70,21 @@ Route::group([
 
     Route::get('/password/update',[DashboardController::class, 'updatePassword'])->name('password.update');
     Route::post('/password/update',[DashboardController::class, 'updatePassword'])->name('password.update');
+
+    // Add Permissions
+    Route::group([
+        'middleware' => ['role_or_permission:superadmin|Add Data'],
+    ],function(){
+        Route::get('user/create', [UserController::class, 'create'])->name('user.create');
+        Route::get('category/create', [CategoryController::class, 'create'])->name('category.create');
+        Route::get('contract/create', [ContractController::class, 'create'])->name('contract.create');
+
+        Route::post('category', [CategoryController::class, 'store'])->name('category.store');
+        Route::post('user', [UserController::class, 'store'])->name('user.store');
+        Route::post('contract', [ContractController::class, 'store'])->name('contract.store');
+        Route::get('contract_print', [ContractController::class, 'print'])->name('contract.print');
+    });
+    
     // View Permissions
     Route::group([
         'middleware' => ['role_or_permission:superadmin|View Data'],
@@ -78,35 +93,24 @@ Route::group([
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('category', [CategoryController::class, 'index'])->name('category.index');
-        Route::get('category/create', [CategoryController::class, 'create'])->name('category.create');
         Route::get('category/{id}', [CategoryController::class, 'show'])->name('category.show');
-        Route::get('category/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit');
     
         Route::get('user', [UserController::class, 'index'])->name('user.index');
-        Route::get('user/create', [UserController::class, 'create'])->name('user.create');
         Route::get('user/{id}', [UserController::class, 'show'])->name('user.show');
-        Route::get('user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
         
         Route::get('contract', [ContractController::class, 'index'])->name('contract.index');
-        Route::get('contract/create', [ContractController::class, 'create'])->name('contract.create');
         Route::get('contract/{id}', [ContractController::class, 'show'])->name('contract.show');
-        Route::get('contract/{id}/edit', [ContractController::class, 'edit'])->name('contract.edit');
-    });
-
-    // Add Permissions
-    Route::group([
-        'middleware' => ['role_or_permission:superadmin|Add Data'],
-    ],function(){
-        Route::post('category', [CategoryController::class, 'store'])->name('category.store');
-        Route::post('user', [UserController::class, 'store'])->name('user.store');
-        Route::post('contract', [ContractController::class, 'store'])->name('contract.store');
-        Route::get('contract_print', [ContractController::class, 'print'])->name('contract.print');
     });
 
     // Update Permissions
     Route::group([
         'middleware' => ['role_or_permission:superadmin|Update Data'],
     ],function(){
+        
+        Route::get('category/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit');
+        Route::get('user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+        Route::get('contract/{id}/edit', [ContractController::class, 'edit'])->name('contract.edit');
+
         Route::put('category/{id}', [CategoryController::class, 'update'])->name('category.update');
         Route::put('user/{id}', [UserController::class, 'update'])->name('user.update');
         Route::put('contract/{id}', [ContractController::class, 'update'])->name('contract.update');
