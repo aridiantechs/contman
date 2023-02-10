@@ -90,34 +90,11 @@
                     </div>
                 {{-- </div>
             </div> --}}
-            <div class="col-lg-7">
+            {{-- <div class="col-lg-7">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5>Requests Statistics</h5>
-                            {{-- <div class="dropdown dropdown-animated scale-left">
-                                <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
-                                    <i class="anticon anticon-ellipsis"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <button class="dropdown-item" type="button">
-                                        <i class="anticon anticon-printer"></i>
-                                        <span class="m-{{$alignShortRev}}-10">Print</span>
-                                    </button>
-                                    <button class="dropdown-item" type="button">
-                                        <i class="anticon anticon-download"></i>
-                                        <span class="m-{{$alignShortRev}}-10">Download</span>
-                                    </button>
-                                    <button class="dropdown-item" type="button">
-                                        <i class="anticon anticon-file-excel"></i>
-                                        <span class="m-{{$alignShortRev}}-10">Export</span>
-                                    </button>
-                                    <button class="dropdown-item" type="button">
-                                        <i class="anticon anticon-reload"></i>
-                                        <span class="m-{{$alignShortRev}}-10">Refresh</span>
-                                    </button>
-                                </div>
-                            </div> --}}
                         </div>
                         <div class="m-t-30">
                             <div class="d-inline-block m-{{$alignShort}}-30">
@@ -138,16 +115,13 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             
-            <div class="col-lg-5">
+            {{-- <div class="col-lg-5">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5>Top Vendors</h5>
-                            {{-- <div>
-                                <a href="javascript:void(0);" class="btn btn-sm btn-default">View All</a>
-                            </div> --}}
                         </div>
                         <div class="m-t-30">
                             <ul class="list-group list-group-flush">
@@ -165,9 +139,6 @@
                                                     <span class="text-muted font-size-13">{{$ser->company->name ?? ''}}</span>
                                                 </div>
                                             </div>
-                                            {{-- <span class="badge badge-pill badge-cyan font-size-12">
-                                                <span class="font-weight-semibold m-{{$alignShortRev}}-5">+18.3%</span>
-                                            </span> --}}
                                         </div>
                                     </li>
                                 @endforeach
@@ -177,9 +148,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
@@ -194,13 +165,13 @@
                                         <span>{{danishFormat($data['revenue'] ?? '')}}</span>
                                     </h3>
                                 </div>
-                                {{-- <div class="px-md-4 m-v-10">
+                                <div class="px-md-4 m-v-10">
                                     <p class="m-b-0">Profit</p>
                                     <h3 class="m-b-0">
                                         <span>$17,523</span>
                                         <span class="text-danger m-{{$alignShortRev}}-10 font-size-14">+1.82%</span>
                                     </h3>
-                                </div> --}}
+                                </div>
                             </div>
                         </div>
                         <div class="m-t-50" style="height: 240px">
@@ -209,7 +180,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-lg-4 d-none">
                 <div class="card">
