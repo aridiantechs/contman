@@ -241,6 +241,20 @@ class ContractController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Content  $content
+     * @return \Illuminate\Http\Response
+     */
+    public function updateStatus($id)
+    {
+        $contract=Contract::where('order_id',$id)->first();
+        $contract->status='COMPLETED';
+        $contract->save();
+        return redirect()->back()->with("status", "Contract status updated.");
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Content  $content

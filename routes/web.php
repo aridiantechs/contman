@@ -110,6 +110,7 @@ Route::group([
         Route::get('category/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit');
         Route::get('user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
         Route::get('contract/{id}/edit', [ContractController::class, 'edit'])->name('contract.edit');
+        Route::get('updateStatus/{id}', [ContractController::class, 'updateStatus'])->name('contract.update_status');
 
         Route::put('category/{id}', [CategoryController::class, 'update'])->name('category.update');
         Route::put('user/{id}', [UserController::class, 'update'])->name('user.update');

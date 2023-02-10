@@ -181,6 +181,12 @@
                                                                 <i class="fas fa-edit "></i>
                                                                 <span class="m-{{$alignShortRev}}-5">Edit</span>
                                                             </a>
+                                                            @if(is_null($contract->status))
+                                                                <a href="{{route('backend.contract.update_status',$contract->order_id)}}" class="btn btn-warning btn-tone ml-2 d-flex">
+                                                                    <span class="m-{{$alignShortRev}}-5">Complete</span>
+                                                                </a>
+                                                            @endif
+                                                            
                                                         @endif
                                                         @if (hasPermission('View Data'))
                                                             <a href="{{route('backend.contract.show',$contract->order_id)}}" class="btn btn-info btn-tone ml-2 d-flex">
