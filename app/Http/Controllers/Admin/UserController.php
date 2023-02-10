@@ -61,10 +61,10 @@ class UserController extends Controller
     {
         $users=User::whereHas('roles',function($q){
             $q->where('name','<>','superadmin');
-        });
+        })->where('active',1);
 
-        $salesperson=User::salesperson()->get();
-        $purchaser=User::purchaser()->get();
+        $salesperson=User::salesperson()->where('active',1)->get();
+        $purchaser=User::purchaser()->where('active',1)->get();
 
         $roles=(clone $users)->get();
         $permissions=Permission::all();
@@ -194,8 +194,8 @@ class UserController extends Controller
             $roles=Role::where('name','<>','superadmin')->get();
             $permissions=Permission::all();
 
-            $salesperson=User::salesperson()->get();
-            $purchaser=User::purchaser()->get();
+            $salesperson=User::salesperson()->where('active',1)->get();
+            $purchaser=User::purchaser()->where('active',1)->get();
             return view('backend.user.create',compact('salesperson','purchaser','user','roles','permissions'));
         } else {
             return redirect()->back()->with("error", "User not found.");
