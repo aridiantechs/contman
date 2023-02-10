@@ -5,6 +5,7 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 <link href="{{asset('backend/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <style>
 
     .select2-container {
@@ -335,6 +336,11 @@
                             <select class="form-control" name="salesperson_id">
                                 
                             </select>
+                            @error('salesperson_id')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
                         <div class="form-group col-md-4 vend__frag" style="display: none">
@@ -359,13 +365,18 @@
                             <select class="form-control" name="purchaser_id">
                                 
                             </select>
+                            @error('purchaser_id')
+                                <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         
                         <div class="form-group col-md-4">
                             <label class="font-weight-semibold">Start Date</label>
                             <div class="input-affix m-b-10">
                                 <i class="prefix-icon anticon anticon-calendar"></i>
-                                <input type="date" class="form-control datepicker-input" name="start_date" placeholder="Start date" value="{{isset($contract) ? $contract->getAttributes()['start_date'] : old('start_date')}}">
+                                <input type="text" class="form-control datepicker-input" name="start_date" placeholder="Start date" value="{{isset($contract) ? $contract->getAttributes()['start_date'] : old('start_date')}}">
                             </div>
                             @error('start_date')
                                 <span class="invalid-feedback" role="alert">
@@ -377,7 +388,7 @@
                             <label class="font-weight-semibold">End Date</label>
                             <div class="input-affix m-b-10">
                                 <i class="prefix-icon anticon anticon-calendar"></i>
-                                <input type="date" class="form-control datepicker-input" name="end_date" placeholder="End date" value="{{isset($contract) ? $contract->getAttributes()['end_date'] : old('end_date')}}">
+                                <input type="text" class="form-control datepicker-input" name="end_date" placeholder="End date" value="{{isset($contract) ? $contract->getAttributes()['end_date'] : old('end_date')}}">
                             </div>
                             @error('end_date')
                                 <span class="invalid-feedback" role="alert">
@@ -418,7 +429,7 @@
                             <label class="font-weight-semibold">Renewal Reminder</label>
                             <div class="input-affix m-b-10">
                                 <i class="prefix-icon anticon anticon-calendar"></i>
-                                <input type="date" class="form-control datepicker-input" name="renewal_reminder_date" placeholder="Renewal Deadline date" value="{{isset($contract) ? $contract->getAttributes()['renewal_reminder_date'] : old('renewal_reminder_date')}}">
+                                <input type="text" class="form-control datepicker-input" name="renewal_reminder_date" placeholder="Renewal Deadline date" value="{{isset($contract) ? $contract->getAttributes()['renewal_reminder_date'] : old('renewal_reminder_date')}}">
                             </div>
                             @error('renewal_reminder_date')
                                 <span class="invalid-feedback" role="alert">
@@ -429,7 +440,8 @@
                         <div class="form-group col-md-12">
                            
                             <label class="font-weight-semibold">Estimated value of contract (annually):</label>
-                            <input type="number" class="form-control" name="contract_value" value="{{isset($contract) ? $contract->contract_value : old('contract_value')}}">
+                            <input type="text" class="form-control" id="contract_value" value="{{isset($contract) ? $contract->contract_value : old('contract_value')}}">
+                            <input type="hidden" name="contract_value">
                             @error('contract_value')
                                 <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -601,7 +613,7 @@
                         <div class="form-group col-md-4">
                            
                             <label class="font-weight-semibold">Meeting Date:</label>
-                            <input type="date" class="form-control" name="meeting_date" value="{{isset($contract) ? $contract->meeting_date : old('meeting_date')}}">
+                            <input type="text" class="form-control datepicker-input" name="meeting_date" value="{{isset($contract) ? $contract->meeting_date : old('meeting_date')}}">
                             @error('meeting_date')
                                 <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -627,10 +639,39 @@
 <!-- Third Party Scripts(used by this page)-->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <script src="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-<script type="text/javascript">
-   
-   $(document).ready(function(){
+<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 
+<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script type="text/javascript">
+   $(document).ready(function(){
+        $(".datepicker-input").datepicker({
+            dateFormat: 'dd-mm-yy',
+        });
+
+        numeral.register('locale', 'da-dk', {
+            delimiters: {
+                thousands: '.',
+                decimal: ','
+            },
+            abbreviations: {
+                thousand: 'k',
+                million: 'mio',
+                billion: 'mia',
+                trillion: 'b'
+            },
+            ordinal: function (number) {
+                return '.';
+            },
+            currency: {
+                symbol: 'DKK'
+            }
+        });
+        $('#contract_value').on('change', function(){
+            var value=numeral($(this).val()).format('0.0,');
+            $('[name="contract_value"]').val($(this).val());
+            $(this).val(value);
+        })
+        console.log(numeral('2163').format('0.0,'));
         $("[name='user_type']").on('change', function(){
             console.log(32323);
             if ($(this).val()=='customer') {
@@ -661,6 +702,9 @@
         @endif
 
         $("[name='product_category[]']").select2();
+        @if (old('product_category'))
+            $("[name='product_category[]']").val({!! json_encode(old('product_category'))!!}).trigger('change');
+        @endif
    })
 
     $("[name='customer']").on('change', function(){

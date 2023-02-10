@@ -5,6 +5,8 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 <link href="{{asset('backend/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
+
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <style>
 
     .select2-container {
@@ -360,7 +362,7 @@
                             <label class="font-weight-semibold">Start Date</label>
                             <div class="input-affix m-b-10">
                                 <i class="prefix-icon anticon anticon-calendar"></i>
-                                <input type="date" class="form-control datepicker-input" name="start_date" placeholder="Start date" value="{{isset($contract) ? $contract->getAttributes()['start_date'] : old('start_date')}}">
+                                <input type="text" class="form-control datepicker-input" name="start_date" placeholder="Start date" value="{{isset($contract) ? $contract->getAttributes()['start_date'] : old('start_date')}}">
                             </div>
                             @error('start_date')
                                 <span class="invalid-feedback" role="alert">
@@ -372,7 +374,7 @@
                             <label class="font-weight-semibold">End Date</label>
                             <div class="input-affix m-b-10">
                                 <i class="prefix-icon anticon anticon-calendar"></i>
-                                <input type="date" class="form-control datepicker-input" name="end_date" placeholder="End date" value="{{isset($contract) ? $contract->getAttributes()['end_date'] : old('end_date')}}">
+                                <input type="text" class="form-control datepicker-input" name="end_date" placeholder="End date" value="{{isset($contract) ? $contract->getAttributes()['end_date'] : old('end_date')}}">
                             </div>
                             @error('end_date')
                                 <span class="invalid-feedback" role="alert">
@@ -401,7 +403,7 @@
                             <label class="font-weight-semibold">Renewal Reminder</label>
                             <div class="input-affix m-b-10">
                                 <i class="prefix-icon anticon anticon-calendar"></i>
-                                <input type="date" class="form-control datepicker-input" name="renewal_reminder_date" placeholder="Renewal Deadline date" value="{{isset($contract) ? $contract->getAttributes()['renewal_reminder_date'] : old('renewal_reminder_date')}}">
+                                <input type="text" class="form-control datepicker-input" name="renewal_reminder_date" placeholder="Renewal Deadline date" value="{{isset($contract) ? $contract->getAttributes()['renewal_reminder_date'] : old('renewal_reminder_date')}}">
                             </div>
                             @error('renewal_reminder_date')
                                 <span class="invalid-feedback" role="alert">
@@ -584,7 +586,7 @@
                         <div class="form-group col-md-4">
                            
                             <label class="font-weight-semibold">Meeting Date:</label>
-                            <input type="date" class="form-control" name="meeting_date" value="{{isset($contract) ? $contract->meeting_date : old('meeting_date')}}">
+                            <input type="text" class="form-control datepicker-input" name="meeting_date" value="{{isset($contract) ? $contract->meeting_date : old('meeting_date')}}">
                             @error('meeting_date')
                                 <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -610,10 +612,14 @@
 <!-- Third Party Scripts(used by this page)-->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <script src="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script type="text/javascript">
    
    $(document).ready(function(){
-      
+        $(".datepicker-input").datepicker({
+            dateFormat: 'dd-mm-yy',
+        });
+
       $("[name='user_type']").on('change', function(){
          if ($(this).val()=='customer') {
                $('.cust__frag').show(); 
