@@ -9,9 +9,9 @@
     <div class="modal-body">
         <div class="row">
             <div class="col-md-12">
-                <div class="card profile-card-2 mt-4">
+                <div class="card profile-card-2 mt-5">
                     <div class="card-body pt-5">
-                        <img src="https://randomuser.me/api/portraits/men/64.jpg" alt="profile-image" class="profile"/>
+                        <img src="{{file_exists($user->profile_image) ?$user->profile_image : asset('backend/assets/images/avatar/thumb-1.jpg') }}" alt="profile-image" class="profile"/>
                         <h5 class="card-title">{{$user->name}}</h5>
                         <p class="card-text"><strong>Email: </strong>{{$user->email}}</p>
                         <p class="card-text"><strong>Phone: </strong>{{$user->phone}}</p>
