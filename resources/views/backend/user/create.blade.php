@@ -125,27 +125,36 @@
 @endsection
 
 @section('content')
+    @php
+        if (isset($user)) {
+            $user_type=\Str::ucFirst(isset($user) && $user->roles()->exists() ? ($user->roles()->first()->name =='employee' ? 'User' :$user->roles()->first()->name) :'User');
+            $action__='Update';
+        }else{
+            $user_type=\Str::ucFirst(request()->query('type') ? (request()->query('type')=='employee' ? 'User' : request()->query('type')) :'User');
+            $action__='Add new';
+        }
+    @endphp
     <!-- Content Wrapper START -->
     <div class="main-content">
         <div class="page-header">
             <div class="header-sub-title">
                 <nav class="breadcrumb breadcrumb-dash d-flex">
                     <a href="{{route('backend.dashboard')}}" class="breadcrumb-item"><i class="anticon anticon-home m-{{$alignShort}}-5"></i>Home</a>
-                    <a href="{{ route('backend.user.index')}}" class="breadcrumb-item">Users</a>
-                    <span class="breadcrumb-item active">Add User</span>
+                    <a href="{{ route('backend.user.index')}}" class="breadcrumb-item">Users & Admins</a>
+                    <span class="breadcrumb-item active">{{$action__}} {{$user_type}}</span>
                 </nav>
             </div>
         </div>
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title font-size-18">Add a User</h4>
+                <h4 class="card-title font-size-18">{{$action__}} {{$user_type}}</h4>
             </div>
             <div class="card-body">
-                @include('backend.partials.errors')
+                {{-- @include('backend.partials.errors') --}}
                 @php 
                   $route = route('backend.user.store');
                   if(isset($user)){
-                     $route = route('backend.user.update',$user->id);
+                     $route = route('backend.user.update',md5($user->id));
                   }
                @endphp
                 <form action="{{$route}}" id="user__form" method="POST" enctype="multipart/form-data">
@@ -172,14 +181,16 @@
                            @php
                               $role = isset($user) && $user->roles()->exists() ? $user->roles()->first()->name :'';
                            @endphp
-                           <select class="form-control" name="role" id="role">
+                           {{-- <select class="form-control" name="role" id="role">
                               <option value="">Select Role</option>
                               <option value="customer" {{$role=='customer' ? 'selected' : ''}}>Customer</option>
                               <option value="salesperson" {{$role=='salesperson' ? 'selected' : ''}}>Salesperson</option>
                               <option value="vendor" {{$role=='vendor' ? 'selected' : ''}}>Vendor</option>
                               <option value="purchaser" {{$role=='purchaser' ? 'selected' : ''}}>Purchaser</option>
                               <option value="employee" {{$role=='employee' ? 'selected' : ''}}>User</option>
-                           </select>
+                           </select> --}}
+                           <input type="text" class="form-control" name="role" id="role" value="{{isset($user) ? $role : (old('role') ?? request()->query('type'))}}" disabled>
+                           <input type="hidden" name="role" value="{{isset($user) ? $role : (old('role') ?? request()->query('type'))}}">
                         </div>
 
                         @php
@@ -193,6 +204,11 @@
                                  <option value="{{$sp->id ?? ''}}">{{$sp->name ?? ''}}</option>
                               @endforeach
                            </select>
+                           @error('salesperson')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
                         @php
@@ -206,25 +222,58 @@
                                  <option value="{{$p->id ?? ''}}">{{$p->name ?? ''}}</option>
                               @endforeach
                            </select>
+                           @error('purchaser')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
-                        <div class="form-group col-md-4">
-                            <label class="font-weight-semibold" for="userName">First Name:</label>
-                            <input type="text" class="form-control" name="first_name" placeholder="First Name" value="{{isset($user) ? $user->first_name : ''}}">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label class="font-weight-semibold" for="userName">Last Name:</label>
-                            <input type="text" class="form-control" name="last_name" placeholder="Last Name" value="{{isset($user) ? $user->last_name : ''}}">
-                        </div>
+                        @if (request()->query('type')=='employee')
+                            <div class="form-group col-md-4">
+                                <label class="font-weight-semibold" for="userName">First Name:</label>
+                                <input type="text" class="form-control" name="first_name" placeholder="First Name" value="{{isset($user) ? $user->first_name : old('first_name')}}">
+                                @error('first_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="font-weight-semibold" for="userName">Last Name:</label>
+                                <input type="text" class="form-control" name="last_name" placeholder="Last Name" value="{{isset($user) ? $user->last_name : old('last_name')}}">
+                                @error('last_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        @else
+                            <div class="form-group col-md-4">
+                                <label class="font-weight-semibold" for="userName">{{Str::ucFirst(request()->query('type') ?? '')}} Name:</label>
+                                <input type="text" class="form-control" name="first_name" placeholder="{{Str::ucFirst(request()->query('type') ?? '')}} Name" value="{{isset($user) ? $user->first_name : old('first_name')}}">
+                                @error('first_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ str_replace('first',request()->query('type'),$message) }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        @endif
+
                         <div class="form-group col-md-4">
                             <label class="font-weight-semibold" for="email">Email:</label>
-                            <input type="email" class="form-control" name="email" id="email" placeholder="email" value="{{isset($user) ? $user->email : ''}}">
+                            <input type="email" class="form-control" name="email" id="email" placeholder="email" value="{{isset($user) ? $user->email : old('email')}}">
+                            @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
                         <div class="form-group col-md-4">
                             <label class="font-weight-semibold" for="phoneNumber">Phone Number:</label>
                             {{-- <input type="text" class="form-control" id="phoneNumber" name="phone" placeholder="Phone Number" value="{{isset($user) ? $user->phone : ''}}"> --}}
 
-                            <input type="tel" maxlength="15"  class="form-control" name="phone" id="phone" value="{{ isset($user)? $user->phone : '' }}">
+                            <input type="tel" maxlength="15"  class="form-control" name="phone" id="phone" value="{{ isset($user)? $user->phone : '+45'.old('phone') }}">
                               <input type="tel" class="hide" name="new_phone" id="hiden">
                               <span id="valid-msg" class="valid-feedback hide">✓ Valid</span>
                               <span id="error-msg" class="invalid-feedback hide"></span>
@@ -235,17 +284,26 @@
                                     </span>
                               @enderror
                         </div>
-                        <div class="form-group col-md-4">
-                            <label class="font-weight-semibold">Designation</label>
-                            <div class="input-affix m-b-10">
-                                <input type="text" class="form-control" value="{{isset($user) ? $user->designation : ''}}" name="designation" placeholder="Designation">
+                        @if (request()->query('type')=='employee')
+                        
+                            <div class="form-group col-md-4">
+                                <label class="font-weight-semibold">Designation</label>
+                                <div class="input-affix m-b-10">
+                                    <input type="text" class="form-control" value="{{isset($user) ? $user->designation : old('designation')}}" name="designation" placeholder="Designation">
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="form-group col-md-4">
-                           <label class="font-weight-semibold" for="email">Password:</label>
-                           <input type="password" class="form-control" name="password" placeholder="Password">
-                        </div>
+                            <div class="form-group col-md-4">
+                                <label class="font-weight-semibold" for="email">Password:</label>
+                                <input type="password" class="form-control" name="password" placeholder="Password">
+                                
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        @endif
+                        
                         @php
                            $display=isset($user) && $user->hasRole('employee') ? 'block' : 'none';
                         //    dd($user->getAllPermissions()->pluck('name')->toArray());
@@ -258,6 +316,12 @@
                                  <option value="{{$perm->name ?? ''}}" {{$perm->name=='endUser' ? 'selected' : ''}}>{{$perm->name ?? ''}}</option>
                               @endforeach
                            </select>
+                           
+                            @error('permissions')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                     </div>
                     <div class="form-row">
@@ -291,12 +355,20 @@
             // console.log({!! json_encode($user->getAllPermissions()->pluck('name')->toArray())!!});
             $("#permission_select").val({!! json_encode($user->getAllPermissions()->pluck('name')->toArray())!!}).trigger('change');
         @elseif (isset($user) && $user->hasRole('customer')) 
-            console.log({!! json_encode($user->getAssociation()->pluck('id')->toArray())!!});
+            // console.log({!! json_encode($user->getAssociation()->pluck('id')->toArray())!!});
             $("#salesperson_select").val({!! json_encode($user->getAssociation()->pluck('id')->toArray())!!}).trigger('change');
         @elseif (isset($user) && $user->hasRole('vendor'))
             $("#purchaser_select").val({!! json_encode($user->getAssociation()->pluck('id')->toArray())!!}).trigger('change');
         @endif
-
+        @if (old('permissions'))
+            $("#permission_select").val({!! json_encode(old('permissions'))!!}).trigger('change');
+        @endif
+        @if (old('salesperson'))
+            $("#salesperson_select").val({!! json_encode(old('salesperson'))!!}).trigger('change');
+        @endif
+        @if (old('purchaser'))
+            $("#purchaser_select").val({!! json_encode(old('purchaser'))!!}).trigger('change');
+        @endif
         //select on change option
         $('#role').on('change', function(){
             var role = $(this).val();
@@ -311,6 +383,7 @@
             $('#permissions').hide();$('#purchaser').hide();$('#salesperson').hide();
             
         });
+        $('#role').trigger('change');
     })
 
 </script>

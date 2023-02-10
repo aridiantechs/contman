@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
@@ -79,14 +80,16 @@ class UserController extends Controller
             $request->phone = str_replace(' ','','+'.' '.$country_data['dialCode'].$request->phone);
         }
         $validator = Validator::make($request->all(),[
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
+            'role' => 'required|string|exists:roles,name',
+            'first_name' => ['required_if:role,==,employee','string'],
+            'last_name' => ['required_if:role,==,employee','string'],
             'phone' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|string',
             'profile_image'=>'nullable|image|max:5000',
-            'role' => 'string|exists:roles,name',
+            'password' => ['required_if:role,==,employee'],
+            'designation' => ['required_if:role,==,employee'],
             'salesperson' => ['required_if:role,==,customer','array'],
             'salesperson.*' => ['exists:users,id'],
             'purchaser' => ['required_if:role,==,vendor','array'],
@@ -102,7 +105,7 @@ class UserController extends Controller
         ]);
         
         if ($validator->fails()) {
-            // dd(333);
+            // dd($validator->errors());
             return redirect()->back()
                     ->withErrors($validator)
                     ->withInput();
@@ -139,7 +142,7 @@ class UserController extends Controller
             ->withProperties(['user_id' => $user->id])
             ->log('User created by ' . auth()->user()->name);
 
-        return redirect()->back()->with("success", "User has been Created.");
+        return redirect()->back()->with("status", "User has been Created.");
     }
 
     /**
@@ -150,7 +153,23 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        if (get_user_by_md5($id)) {
+            $user =User::findOrFail(get_user_by_md5($id)->id);
+            $view_data=view('backend.user.modal',compact('user'))->render();
+            $res=array(
+                'status' => 'success',
+                'data' => $view_data
+            );
+            
+        }else{
+            $res=array(
+                'status' => 'error',
+                'message'=>"data not found"
+        
+            );
+        }
+
+        return Response::json($res);
     }
 
     /**
@@ -161,13 +180,18 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user= User::findOrFail($id);
-        $roles=Role::where('name','<>','superadmin')->get();
-        $permissions=Permission::all();
+        if (get_user_by_md5($id)) {
+            $user =User::findOrFail(get_user_by_md5($id)->id);
+            $roles=Role::where('name','<>','superadmin')->get();
+            $permissions=Permission::all();
 
-        $salesperson=User::salesperson()->get();
-        $purchaser=User::purchaser()->get();
-        return view('backend.user.create',compact('salesperson','purchaser','user','roles','permissions'));
+            $salesperson=User::salesperson()->get();
+            $purchaser=User::purchaser()->get();
+            return view('backend.user.create',compact('salesperson','purchaser','user','roles','permissions'));
+        } else {
+            return redirect()->back()->with("error", "User not found.");
+        }
+        
     }
 
     /**
@@ -188,16 +212,19 @@ class UserController extends Controller
             }
             $request->phone = str_replace(' ','','+'.' '.$country_data['dialCode'].$request->phone);
         }
+       
+        $user =User::findOrFail(get_user_by_md5($id)->id);
         $validator = Validator::make($request->all(),[
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
+            'role' => 'required|string|exists:roles,name',
+            'first_name' => ['required_if:role,==,employee','string'],
+            'last_name' => ['required_if:role,==,employee','string'],
             'phone' => ['required', 'string'],
-            'email' => ['required', 'email','unique:users,email,'.$id],
+            'email' => ['required', 'email','unique:users,email,'.$user->id],
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|string',
-            'password'  => 'string|nullable',
+            'password' => ['nullable'],
+            'designation' => ['required_if:role,==,employee'],
             'profile_image'=>'nullable|image|max:5000',
-            'role' => 'string|exists:roles,name',
             'salesperson' => ['required_if:role,==,customer','array'],
             'salesperson.*' => ['exists:users,id'],
             'purchaser' => ['required_if:role,==,vendor','array'],
@@ -218,7 +245,6 @@ class UserController extends Controller
                         ->withInput();
         }
         
-        $user =User::findOrFail($id);
         $user->fill($request->except(['_token','password','phone','phone_c_data']));
         $user->designation = $request->designation ?? '';
         $user->phone = $request->phone;
@@ -265,7 +291,8 @@ class UserController extends Controller
         $user=User::findOrFail($id);
         $user->roles()->detach();
         $user->permissions()->detach();
-        $user->delete();
+        $user->active=0;
+        $user->save();
 
         activity('user')
             ->performedOn($user)
@@ -273,14 +300,6 @@ class UserController extends Controller
             ->withProperties(['user_id' => $user->id])
             ->log('User deleted by ' . auth()->user()->name);
 
-        return redirect()->back();
-    }
-
-    public function impersonate($id)
-    {
-        $user=User::findOrFail($id);
-        \Auth::user()->impersonate($user);
-
-        return redirect()->back()->with("status", "User Impersonated.");
+        return redirect()->back()->with("status", "User Deleted.");
     }
 }

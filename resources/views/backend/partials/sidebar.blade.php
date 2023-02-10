@@ -79,10 +79,16 @@
                         <a href="{{route('backend.user.index')}}?type=vendor">Vendor</a>
                     </li>
                     <li>
+                        <a href="{{route('backend.user.index')}}?type=salesperson">Salesperson</a>
+                    </li>
+                    <li>
+                        <a href="{{route('backend.user.index')}}?type=purchaser">Purchaser</a>
+                    </li>
+                    <li>
                         <a href="{{route('backend.user.index')}}?type=employee">User</a>
                     </li>
                     <li>
-                        <a href="{{route('backend.user.create')}}">Add User</a>
+                        <a href="{{route('backend.user.create')}}">Add New</a>
                     </li>
                 </ul>
             </li>

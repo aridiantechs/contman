@@ -75,6 +75,14 @@ if (!function_exists('getFullUrl'))
     }
 }
 
+if(!function_exists('get_user_by_md5'))
+{
+    function get_user_by_md5($token)
+    {
+        return $user = DB::table('users')->whereRaw('md5(binary(id)) = "' . $token . '"')->first();
+    }
+}
+
 if (!function_exists('danishFormat'))
 {
     function danishFormat($number,$currency=false)

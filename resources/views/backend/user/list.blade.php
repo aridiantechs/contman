@@ -1,19 +1,72 @@
 @extends('backend.layouts.app')
 
 @section('styles')
-
+<style>
+    /*Profile card 2*/
+.profile-card-2 .card-img-block{
+    float:left;
+    width:100%;
+    height:150px;
+    overflow:hidden;
+}
+.profile-card-2 .card-body{
+    position:relative;
+}
+.profile-card-2 .profile {
+  border-radius: 50%;
+  position: absolute;
+  top: -50px;
+    left: 50%;
+    max-width: 100px;
+  border: 3px solid rgba(255, 255, 255, 1);
+  -webkit-transform: translate(-50%, 0%);
+  transform: translate(-50%, 0%);
+}
+.profile-card-2 h5{
+    font-weight:600;
+    color:#6ab04c;
+}
+.profile-card-2 .card-text{
+    font-size:15px;
+}
+.profile-card-2 .icon-block{
+    float:left;
+    width:100%;
+}
+.profile-card-2 .icon-block a{
+    text-decoration:none;
+}
+.profile-card-2 i {
+  display: inline-block;
+    font-size: 16px;
+    color: #6ab04c;
+    text-align: center;
+    border: 1px solid #6ab04c;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    margin:0 5px;
+}
+.profile-card-2 i:hover {
+  background-color:#6ab04c;
+  color:#fff;
+}
+</style>
 @endsection
 
 @section('content')
-
+    @php
+        $user_type=\Str::ucFirst(request()->query('type') ? (request()->query('type')=='employee' ? 'User' : request()->query('type')) :'User');
+    @endphp
     <!-- Content Wrapper START -->
     <div class="main-content">
         <div class="page-header">
-            <h2 class="header-title">Users</h2>
+            <h2 class="header-title">Users & Admins</h2>
             <div class="header-sub-title">
                 <nav class="breadcrumb breadcrumb-dash">
                     <a href="{{route('backend.company.index')}}" class="breadcrumb-item"><i class="anticon anticon-home m-{{$alignShort}}-5"></i>Home</a>
-                    <span class="breadcrumb-item active">Users</span>
+                    <span class="breadcrumb-item active">Users & Admins</span>
                 </nav>
             </div>
         </div>
@@ -26,7 +79,7 @@
                             <i class="fas fa-users"></i>
                         </div>
                         <div class="media-body m-{{$alignShortRev}}-15">
-                            <h6 class="mb-0">All Users</h6>
+                            <h6 class="mb-0">All {{$user_type}}s</h6>
                             {{-- <span class="text-gray font-size-13">Sanad Team</span> --}}
                         </div>
                     </div>
@@ -34,8 +87,8 @@
                 <div class="col-md-6">
                     <div class="text-md-{{$alignreverse}} m-v-10">
                         @if (hasPermission('Add Data'))
-                            <a href="{{route('backend.user.create')}}" class="btn btn-primary m-{{$alignShortRev}}-15">
-                                <span>Add new user</span>
+                            <a href="{{route('backend.user.create')}}{{request()->query('type') ? '?type='.request()->query('type') : ''}}" class="btn btn-primary m-{{$alignShortRev}}-15">
+                                <span>Add new {{$user_type}}</span>
                             </a>
                         @endif
                     </div>
@@ -97,9 +150,15 @@
                                                         @endif
 
                                                         @if (hasPermission('Update Data'))
-                                                            <a href="{{route('backend.user.edit',$user->id)}}" class="btn btn-success btn-tone">
+                                                            <a href="{{route('backend.user.edit',md5($user->id))}}?type={{$user->roles()->first()->name}}" class="btn btn-success btn-tone">
                                                                 <i class="fas fa-edit "></i>
                                                                 <span class="m-{{$alignShortRev}}-5">Edit</span>
+                                                            </a>
+                                                        @endif
+                                                        @if (hasPermission('View Data'))
+                                                            <a href="javascript:void(0)" class="btn btn-info btn-tone profile" data-user-id="{{md5($user->id)}}">
+                                                                <i class="fas fa-eye "></i>
+                                                                <span class="m-{{$alignShortRev}}-5">View</span>
                                                             </a>
                                                         @endif
 													</td>
@@ -280,6 +339,11 @@
         </div>
     </div>
     <!-- Quick View END -->
+
+    <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog profile_modal_div" role="document">
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -322,6 +386,28 @@
 		
 	});
 
+
+    $(document).on('click','.profile',function(e){
+        e.preventDefault();
+        // fullPageLoader(true);
+        var cat_id=$(this).data('user-id');
+
+        $.ajax({
+            url: "{{ url('/') }}/backend/user/"+cat_id,
+            type: 'GET',
+            success: function (res) {
+                // fullPageLoader(false);
+                if (res.status=='success') {
+                    $(' .profile_modal_div').html(res.data);
+                    $('#profileModal').modal('toggle');
+                }
+                else if(res.status=='error') {
+                    toastr.success(res.message)
+                }
+            }
+        });
+        
+    });
 </script>
 
 <script>
