@@ -35,7 +35,16 @@ class UserController extends Controller
             $q->whereHas('roles',function($q)use($request){
                 $q->where('name',$request->query('type'));
             });
-        });
+        })
+        ->when($request->query('search_text'),function($q)use($request){
+            $search=$request->query('search_text');
+            $q->where(function($q2)use($search){
+                $q2->where('first_name','LIKE','%'.$search.'%')
+                ->orWhere('last_name','LIKE','%'.$search.'%')
+                ->orWhere('email','LIKE','%'.$search.'%')
+                ->orWhere('phone','LIKE','%'.$search.'%');
+            });
+        })->where('active',1);
 
         $roles=(clone $users)->get();
         $users=$users->paginate(10);

@@ -95,6 +95,21 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <form class="form-row" action="{{ getFullUrl() }}">
+                    <h3 class="col-md-12">Search contracts</h3>
+                    <hr>
+                    <div class="form-group col-md-4">
+                        <input type="text" class="form-control" id="search_text" name="search_text" value="{{request()->query('search_text')}}">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button class="btn btn-primary" type="submit">Go</button>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-12">
                 <!-- Card View -->
@@ -150,7 +165,7 @@
                                                         @endif
 
                                                         @if (hasPermission('Update Data'))
-                                                            <a href="{{route('backend.user.edit',md5($user->id))}}?type={{$user->roles()->first()->name}}" class="btn btn-success btn-tone">
+                                                            <a href="{{route('backend.user.edit',md5($user->id))}}?type={{$user->roles()->first()->name ?? ''}}" class="btn btn-success btn-tone">
                                                                 <i class="fas fa-edit "></i>
                                                                 <span class="m-{{$alignShortRev}}-5">Edit</span>
                                                             </a>
