@@ -622,6 +622,8 @@
    $(document).ready(function(){
         $(".datepicker-input").datepicker({
             dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true,
         });
 
         numeral.register('locale', 'da-dk', {

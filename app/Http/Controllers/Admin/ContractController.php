@@ -158,6 +158,10 @@ class ContractController extends Controller
         $contract->renewal_reminder_date = $request->renewal_reminder_date;
         $contract->contract_value = $request->contract_value;
 
+        $val__=str_replace(".","",$request->contract_value);
+        $val__=str_replace(",",".",$val__);
+        $contract->contract_value_usd = $val__;
+
         if ($request->user_type=='customer') {
             $contract->contract_type = $request->contract_type;
             $contract->extension = $request->extension;
@@ -175,10 +179,12 @@ class ContractController extends Controller
         $contract->emp_id = auth()->user()->id;
         $contract->save();
 
-        foreach ($request->product_category as $key => $pc) {
-            ContractProductCategory::insert([
-                'contract_id'=>$contract->id, 'product_category_id'=> $pc
-            ]);
+        if($request->product_category) {
+            foreach ($request->product_category as $key => $pc) {
+                ContractProductCategory::insert([
+                    'contract_id'=>$contract->id, 'product_category_id'=> $pc
+                ]);
+            }
         }
         
         if($request->hasFile('contract_file')) {
@@ -338,6 +344,10 @@ class ContractController extends Controller
         $contract->renewal_reminder_date = $request->renewal_reminder_date;
         $contract->contract_value = $request->contract_value;
 
+        $val__=str_replace(".","",$request->contract_value);
+        $val__=str_replace(",",".",$val__);
+        $contract->contract_value_usd = $val__;
+
         
         $contract->contract_type = $request->user_type== 'customer' ? $request->contract_type : null;
         $contract->extension = $request->user_type== 'customer' ? $request->extension : null;
@@ -356,10 +366,12 @@ class ContractController extends Controller
         $contract->save();
 
         $contract->product_categories()->delete();
-        foreach ($request->product_category as $key => $pc) {
-            ContractProductCategory::insert([
-                'contract_id'=>$contract->id, 'product_category_id'=> $pc
-            ]);
+        if($request->product_category) {
+            foreach ($request->product_category as $key => $pc) {
+                ContractProductCategory::insert([
+                    'contract_id'=>$contract->id, 'product_category_id'=> $pc
+                ]);
+            }
         }
 
         if($request->hasFile('contract_file')) {

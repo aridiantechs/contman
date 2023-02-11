@@ -20,7 +20,7 @@ class DashboardController extends Controller
 {
   	public function index() 
   	{
-		$revenue=Contract::sum('contract_value');
+		$revenue=Contract::sum('contract_value_usd');
 		$orders=Contract::count();
 
 		$customers=User::whereHas('roles',function($q){
@@ -35,7 +35,7 @@ class DashboardController extends Controller
 		$recent_contracts=Contract::latest()->limit(10)->get();
 		
 		$graph=Contract::select(
-            DB::raw('sum(contract_value) as `revenue`'), 
+            DB::raw('sum(contract_value_usd) as `revenue`'), 
             DB::raw("DATE_FORMAT(created_at,'%b %Y') as months")
   		)->groupBy('months')->get();
 		// dd($graph->pluck('months')->toArray());
