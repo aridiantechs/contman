@@ -25,7 +25,7 @@
                                     <p class="m-b-0 text-muted">Revenue</p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <i class="fas fa-money-bill stats-icon"></i>
-                                        <h2 class="m-b-0 stats-val">{{$data['revenue'] ?? ''}}</h2>
+                                        <h2 class="m-b-0 stats-val">{{danishFormat($data['revenue'] ?? '')}}</h2>
                                     </div>
                                     {{-- <span class="badge badge-pill badge-cyan font-size-12">
                                         <i class="anticon anticon-arrow-up"></i>
