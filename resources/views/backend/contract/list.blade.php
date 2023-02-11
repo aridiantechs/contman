@@ -158,7 +158,7 @@
 													<td>{{ $contract->end_date ?? '' }}</td>
 													<td>{{ $contract->renewal_date ?? '' }}</td>
 													<td>{{ $contract->renewal_reminder_date ?? '' }}</td>
-													<td>{{danishFormat($contract->contract_value ?? '') }}</td>
+													<td>{{$contract->contract_value ?? '' }}</td>
 													<td class="d-flex">
                                                         {{-- <div class="dropdown dropdown-inline">
                                                             <button type="button" class="btn btn-default btn-icon btn-sm btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

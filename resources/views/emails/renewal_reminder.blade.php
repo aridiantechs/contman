@@ -180,7 +180,7 @@
 													   <li><b>{{$data['contract']->user_type == 'vendor' ? 'Purchaser' : 'Salesperson'}} </b>- {{$data['contract']->association->name  ?? ''}}</li>
 													   <li><b>Start date</b>- {{$data['contract']->start_date}}</li>
 													   <li><b>Renewal Date</b>- {{$data['contract']->renewal_date}}</li>
-													   <li><b>Contract value</b>- {{danishFormat($data['contract']->contract_value)}}</li>
+													   <li><b>Contract value</b>- {{$data['contract']->contract_value}}</li>
 													   
 												   </ul>
 												</p>
