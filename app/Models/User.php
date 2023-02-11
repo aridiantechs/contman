@@ -137,7 +137,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getProfileImageAttribute($value)
     {
-        return $value ? ($this->provider ? $value : (url('/').'/storage/uploads/users/' . $value) ): "";
+        return $value ? ($this->provider ? $value : (url('/').'/storage/public/uploads/users/' . $value) ): "";
     }
 
     public function getNameAttribute()

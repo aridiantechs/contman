@@ -18,6 +18,7 @@
   top: -50px;
     left: 50%;
     max-width: 100px;
+    height: 100px;
   border: 3px solid rgba(255, 255, 255, 1);
   -webkit-transform: translate(-50%, 0%);
   transform: translate(-50%, 0%);
