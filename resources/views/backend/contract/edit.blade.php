@@ -414,7 +414,8 @@
                         <div class="form-group col-md-12">
                            
                             <label class="font-weight-semibold">Estimated value of contract (annually):</label>
-                            <input type="number" class="form-control" name="contract_value" value="{{isset($contract) ? $contract->contract_value : old('contract_value')}}">
+                            <input type="text" class="form-control" id="contract_value" name="contract_value"  value="{{isset($contract) ? $contract->contract_value : old('contract_value')}}">
+                            {{-- <input type="hidden" name="contract_value" value="{{isset($contract) ? $contract->contract_value : old('contract_value')}}"> --}}
                             @error('contract_value')
                                 <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -444,6 +445,7 @@
                             <label class="font-weight-semibold">Extension</label>
                             <select class="form-control" name="extension">
                                 <option value="">Select type</option>
+                                <option value="none" {{$extension=="none" ? 'selected' : ''}}>None</option>
                                 <option value="automatic" {{$extension=="automatic" ? 'selected' : ''}}>Automatic</option>
                             </select>
                             @error('extension')
@@ -459,6 +461,7 @@
                             <label class="font-weight-semibold">Extension Period</label>
                             <select class="form-control" name="extension_period">
                                 <option value="">Select type</option>
+                                <option value="none" {{$extension_period=="none" ? 'selected' : ''}}>None</option>
                                 <option value="12-months" {{$extension_period=="12-months" ? 'selected' : ''}}>12 months</option>
                             </select>
                             @error('extension_period')
@@ -612,6 +615,7 @@
 <!-- Third Party Scripts(used by this page)-->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <script src="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script type="text/javascript">
    
@@ -620,6 +624,32 @@
             dateFormat: 'dd-mm-yy',
         });
 
+        numeral.register('locale', 'da-dk', {
+            delimiters: {
+                thousands: '.',
+                decimal: ','
+            },
+            abbreviations: {
+                thousand: 'k',
+                million: 'mio',
+                billion: 'mia',
+                trillion: 'b'
+            },
+            ordinal: function (number) {
+                return '.';
+            },
+            currency: {
+                symbol: 'DKK'
+            }
+        });
+        numeral.locale('da-dk');
+
+        $('#contract_value').on('change', function(){
+            var value=numeral($(this).val()).format('0.0,');
+            $('[name="contract_value"]').val($(this).val());
+            $(this).val(value);
+        })
+        $('#contract_value').trigger('change');
       $("[name='user_type']").on('change', function(){
          if ($(this).val()=='customer') {
                $('.cust__frag').show(); 
