@@ -471,6 +471,7 @@
                             <label class="font-weight-semibold">Extension</label>
                             <select class="form-control" name="extension">
                                 <option value="">Select type</option>
+                                <option value="none">None</option>
                                 <option value="automatic" {{$extension=="automatic" ? 'selected' : ''}}>Automatic</option>
                             </select>
                             @error('extension')
@@ -486,6 +487,7 @@
                             <label class="font-weight-semibold">Extension Period</label>
                             <select class="form-control" name="extension_period">
                                 <option value="">Select type</option>
+                                <option value="none">None</option>
                                 <option value="12-months" {{$extension_period=="12-months" ? 'selected' : ''}}>12 months</option>
                             </select>
                             @error('extension_period')

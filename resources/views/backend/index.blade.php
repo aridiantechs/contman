@@ -249,7 +249,7 @@
                                                 <td>{{ $contract->association->name ?? '' }}</td>
                                                 <td>{{ $contract->start_date ?? '' }}</td>
                                                 <td>{{ $contract->end_date ?? '' }}</td>
-                                                <td>{{ $contract->renewal_date ?? '' }}</td>
+                                                <td class="{{\Carbon\Carbon::parse($contract->renewal_date)->lt(now()) ? 'text-danger' : ''}}">{{ $contract->renewal_date ?? '' }}</td>
                                                 <td>{{ $contract->renewal_reminder_date ?? '' }}</td>
                                                 <td>{{ danishFormat($contract->contract_value ?? '') }}</td>
                                                 
