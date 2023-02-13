@@ -2,7 +2,7 @@
 <div class="modal-content">
     <div class="modal-header">
         
-        <h4 class="mt-3 w-100 float-left text-center"><strong>Social Profile Card</strong></h4>
+        <h4 class="mt-3 w-100 float-left text-center"><strong>Profile Card</strong></h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         </button>
     </div>
