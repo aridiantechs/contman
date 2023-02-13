@@ -136,6 +136,17 @@
         margin: 4px 0px;
         white-space: nowrap;
     }
+
+    .p-rel{
+        position: relative;
+    }
+
+    .p-rel img{
+        position: absolute;
+        top: 20px;
+        left: 5px;
+        opacity: 0.6;
+    }
 </style>
 @endsection
 
@@ -238,8 +249,9 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>
-                                                        <i class="fa fa-dollar-sign icon"></i>
+                                                    <td class="p-rel">
+                                                        <img src="{{asset('backend/assets/images/kr.png')}}" alt="">
+                                                        {{-- <i class="fa fa-dollar-sign icon"></i> --}}
                                                         <p>Contract value</p>
                                                         <h6>  {{ $contract->contract_value }}</h6>
                                                     </td>
