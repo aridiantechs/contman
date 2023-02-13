@@ -12,7 +12,7 @@
 .profile-card-2 .card-body{
     position:relative;
 }
-.profile-card-2 .profile {
+.profile-card-2 .profilee {
   border-radius: 50%;
   position: absolute;
   top: -50px;

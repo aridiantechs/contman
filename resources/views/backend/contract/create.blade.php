@@ -418,7 +418,7 @@
                                     <option value="unlimited" {{old('renewal_interval')=="unlimited" ? 'selected' : ''}}>Unlimited</option>
                                 </select>
                             </div>
-                            @error('renewal_date')
+                            @error('renewal_interval')
                                 <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                                 </span>

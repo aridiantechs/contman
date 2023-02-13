@@ -108,7 +108,7 @@ class ContractController extends Controller
             "vendor" => ['required_if:user_type,==,vendor'],
             "start_date" => ['required', 'date'],
             "end_date" => ['required', 'date','after:start_date'],
-            "renewal_interval" => ['required', 'in:one_time,unlimited'],
+            "renewal_interval" => ['nullable', 'in:one_time,unlimited'],
             "renewal_reminder_date" => ['required', 'date','after:start_date','before:end_date'],
             "contract_value" =>['required', 'string'],
             "contract_file" => ['nullable', 'array'],
@@ -120,7 +120,7 @@ class ContractController extends Controller
         if ($request->user_type=='customer') {
             $rules = array_merge($rules, [
                 "contract_type" => ['required', 'string'],
-                "extension" => ['required', 'in:automatic'],
+                "extension" => ['required', 'in:none,automatic'],
                 "extension_period" => ['required', 'string'],
                 "performance_delivery_degree" => ['required', 'string'],
                 "performance_delivery_time" => ['required', 'string'],
@@ -154,7 +154,7 @@ class ContractController extends Controller
         $contract->start_date = $request->start_date;
         $contract->end_date = $request->end_date;
         $contract->renewal_date = $request->end_date;
-        $contract->renewal_interval = $request->renewal_interval;
+        $contract->renewal_interval = $request->renewal_interval ?? null;
         $contract->renewal_reminder_date = $request->renewal_reminder_date;
         $contract->contract_value = $request->contract_value;
 
@@ -295,7 +295,7 @@ class ContractController extends Controller
             "vendor" => ['required_if:user_type,==,vendor'],
             "start_date" => ['required', 'date'],
             "end_date" => ['required', 'date','after:start_date'],
-            "renewal_interval" => ['required', 'in:one_time,unlimited'],
+            "renewal_interval" => ['nullable', 'in:one_time,unlimited'],
             "renewal_reminder_date" => ['required', 'date','after:start_date','before:end_date'],
             "contract_value" =>['required', 'string'],
             "contract_file" => ['nullable', 'array'],
@@ -307,7 +307,7 @@ class ContractController extends Controller
         if ($request->user_type=='customer') {
             $rules = array_merge($rules, [
                 "contract_type" => ['required', 'string'],
-                "extension" => ['required', 'in:automatic'],
+                "extension" => ['required', 'in:none,automatic'],
                 "extension_period" => ['required', 'string'],
                 "performance_delivery_degree" => ['required', 'string'],
                 "performance_delivery_time" => ['required', 'string'],
@@ -340,7 +340,7 @@ class ContractController extends Controller
         $contract->start_date = $request->start_date;
         $contract->end_date = $request->end_date;
         $contract->renewal_date = $request->end_date;
-        $contract->renewal_interval = $request->renewal_interval;
+        $contract->renewal_interval = $request->renewal_interval ?? null;
         $contract->renewal_reminder_date = $request->renewal_reminder_date;
         $contract->contract_value = $request->contract_value;
 

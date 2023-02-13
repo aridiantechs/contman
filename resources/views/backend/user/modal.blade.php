@@ -11,7 +11,7 @@
             <div class="col-md-12">
                 <div class="card profile-card-2 mt-5">
                     <div class="card-body pt-5">
-                        <img src="{{\File::exists(public_path()."/storage/public/uploads/users/".$user->getAttributes()['profile_image']) ?$user->profile_image : asset('backend/assets/images/avatars/thumb-1.jpg') }}" alt="profile-image" class="profile"/>
+                        <img src="{{\File::exists(public_path()."/storage/public/uploads/users/".$user->getAttributes()['profile_image']) ?$user->profile_image : asset('backend/assets/images/avatars/thumb-1.jpg') }}" alt="profile-image" class="profilee"/>
                         <h5 class="card-title">{{$user->name}}</h5>
                         <p class="card-text"><strong>Email: </strong>{{$user->email}}</p>
                         <p class="card-text"><strong>Phone: </strong>{{$user->phone}}</p>

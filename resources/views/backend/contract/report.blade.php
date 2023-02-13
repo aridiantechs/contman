@@ -147,7 +147,7 @@
         </div>
     </div> --}}
     <div class="section blog picklist mb-5" id="resume_div">
-        <div class="container mt-3 bg-white pb-5">
+        <div class="card mt-3 bg-white pb-5">
             <div class="row">
                 <div class="blog__posts col-md-12">
                     <div class="blog__list mt-5">
