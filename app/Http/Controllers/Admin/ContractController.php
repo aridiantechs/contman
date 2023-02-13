@@ -72,7 +72,7 @@ class ContractController extends Controller
         })
         ->when($request->query('extension_period'),function($q)use($request){
             $q->where('extension_period',$request->extension_period);
-        })->paginate(15);
+        })->latest()->paginate(15);
 
         return view('backend.contract.list',compact('contracts','categories'));
     }
