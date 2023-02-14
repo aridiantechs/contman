@@ -116,17 +116,17 @@ class Contract extends Model
 
     public static function getReminderContracts() {
         $now = \Carbon\Carbon::now();
-        $threeMonthsFromNow = $now->copy()->addMonths(3)->format('Y-m-d');
-        $oneMonthFromNow = $now->copy()->addMonths(1)->format('Y-m-d');
-        $fifteenDaysFromNow = $now->copy()->addDays(15)->format('Y-m-d');
-        $sevenDaysFromNow = $now->copy()->addDays(7)->format('Y-m-d');
+        $threeMonthsFromNow = $now->copy()->addMonths(3)->format('d-m-Y');
+        $oneMonthFromNow = $now->copy()->addMonths(1)->format('d-m-Y');
+        $fifteenDaysFromNow = $now->copy()->addDays(15)->format('d-m-Y');
+        $sevenDaysFromNow = $now->copy()->addDays(7)->format('d-m-Y');
         
         $contracts=Contract::whereNull('status');
         return $contracts_to_reminder= [
-            '7-days' => (clone $contracts)->whereDate('end_date', $sevenDaysFromNow)->get(),
-            '15-days' => (clone $contracts)->whereDate('end_date', $fifteenDaysFromNow)->get(),
-            '1-month' => (clone $contracts)->whereDate('end_date', $oneMonthFromNow)->get(),
-            '3-month' => (clone $contracts)->whereDate('end_date', $threeMonthsFromNow)->get(),
+            '7-days' => (clone $contracts)->where('end_date', $sevenDaysFromNow)->get(),
+            '15-days' => (clone $contracts)->where('end_date', $fifteenDaysFromNow)->get(),
+            '1-month' => (clone $contracts)->where('end_date', $oneMonthFromNow)->get(),
+            '3-month' => (clone $contracts)->where('end_date', $threeMonthsFromNow)->get(),
         ];
     }
 }

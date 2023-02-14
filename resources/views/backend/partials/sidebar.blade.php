@@ -88,7 +88,7 @@
                         <a href="{{route('backend.user.index')}}?type=employee">User</a>
                     </li>
                     <li>
-                        <a href="{{route('backend.user.create')}}">Add New</a>
+                        <a href="{{route('backend.user.create')}}?type=employee">Add New</a>
                     </li>
                 </ul>
             </li>

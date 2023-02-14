@@ -47,13 +47,13 @@ class ChargePremiumUserJob implements ShouldQueue
                 'total_posts'=>$total_posts,
             ];
 
-            /* try { */
+            try {
                 $email = new PremiumInvoice($data);
                 Mail::to($user->email)->send($email);
 
-            /* } catch (\Throwable $th) {
+            } catch (\Throwable $th) {
                 
-            } */
+            }
             
         }
         

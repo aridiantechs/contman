@@ -36,6 +36,9 @@ Route::get('lang/{locale}', [App\Http\Controllers\LocalizationController::class,
 Route::get('/', function () {
     return redirect()->route('login');
 })->name('/');
+Route::get('/schedule_run', function () {
+    \Artisan::call('schedule:run');
+})->name('schedule_run');
 
 /* Route::get('replicate', function (Request $request){
     $intervals = \App\Models\Contract::getReminderContracts();

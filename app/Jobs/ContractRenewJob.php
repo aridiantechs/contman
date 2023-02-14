@@ -32,7 +32,7 @@ class ContractRenewJob implements ShouldQueue
      */
     public function handle()
     {
-        $contracts=\App\Models\Contract::whereDate('end_date','=',\Carbon\Carbon::now()->format('Y-m-d'))
+        $contracts=\App\Models\Contract::where('end_date','=',\Carbon\Carbon::now()->format('d-m-Y'))
                                         ->whereNull('status')
                                         ->where(function($q){
                                             $q->whereIn('renewal_interval',['one_time','unlimited']);
