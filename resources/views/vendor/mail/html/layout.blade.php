@@ -21,6 +21,10 @@ width: 100% !important;
 width: 100% !important;
 }
 }
+
+td.content-cell>p:nth-last-child(3){
+    display: none !important;
+}
 </style>
 </head>
 <body>
@@ -40,6 +44,11 @@ width: 100% !important;
 <td class="content-cell">
 {{ Illuminate\Mail\Markdown::parse($slot) }}
 
+<div>
+    Regards,
+    <br>
+    {{ config('app.name').' Team' }}
+</div>
 {{ $subcopy ?? '' }}
 </td>
 </tr>
@@ -52,5 +61,10 @@ width: 100% !important;
 </td>
 </tr>
 </table>
+<script>
+    const contentCell = document.querySelector('td.content-cell');
+    const pElement = contentCell.querySelector('p'); 
+    pElement.innerHTML = ''; 
+</script>
 </body>
 </html>
