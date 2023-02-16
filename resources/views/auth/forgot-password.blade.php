@@ -7,7 +7,7 @@
     <title>Contman - Login </title>
 
     <!-- Favicon -->
-    {{-- <link rel="shortcut icon" href="{{asset('backend/assets/images/logo/favicon.png')}}"> --}}
+    <link rel="shortcut icon" href="{{asset('backend/assets/images/favicon.ico')}}">
 
     <!-- page css -->
 

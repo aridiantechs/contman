@@ -22,9 +22,9 @@ width: 100% !important;
 }
 }
 
-td.content-cell>p:nth-last-child(3){
+/* td.content-cell>p:nth-last-child(3){
     display: none !important;
-}
+} */
 </style>
 </head>
 <body>
@@ -44,11 +44,11 @@ td.content-cell>p:nth-last-child(3){
 <td class="content-cell">
 {{ Illuminate\Mail\Markdown::parse($slot) }}
 
-<div>
+{{-- <div>
     Regards,
     <br>
     {{ config('app.name').' Team' }}
-</div>
+</div> --}}
 {{ $subcopy ?? '' }}
 </td>
 </tr>

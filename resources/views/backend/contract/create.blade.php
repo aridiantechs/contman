@@ -270,13 +270,17 @@
                     <div class="form-row">
                         <div class="col-md-12 mb-2">
                             <div class="container">
+                                @php
+                                    $type__=old('user_type') ? old('user_type') : (request()->query('type') ?? '');
+                                    $default=$type__ ? false : true; 
+                                @endphp
                                 <div class="selector mx-auto">
                                     <div class="selecotr-item">
-                                        <input type="radio" id="customer" name="user_type" value="customer" class="selector-item_radio" {{isset($contract) ?($contract->user_type=='customer'? 'checked': '') : 'checked'}}>
+                                        <input type="radio" id="customer" name="user_type" value="customer" class="selector-item_radio" {{$type__=='customer'? 'checked' : ($default ?'checked':'')}}>
                                         <label for="customer" class="selector-item_label">Customer</label>
                                     </div>
                                     <div class="selecotr-item">
-                                        <input type="radio" id="vendor" name="user_type" value="vendor" class="selector-item_radio" {{isset($contract) && $contract->user_type=='vendor'? 'checked': ''}}>
+                                        <input type="radio" id="vendor" name="user_type" value="vendor" class="selector-item_radio" {{$type__=='vendor'? 'checked': ''}}>
                                         <label for="vendor" class="selector-item_label">Vendor</label>
                                     </div>
                                     @error('user_type')
@@ -702,7 +706,7 @@
             }
         })
     // $("[name='delivery_instructions']").tagsinput();
-        @if( old('user_type'))
+        @if( old('user_type') || !$default)
             $("[name='user_type']:checked").trigger('change');
         @endif
 

@@ -97,7 +97,7 @@
                 <div class="col-md-6">
                     <div class="text-md-{{$alignreverse}} m-v-10">
                         @if (hasPermission('Add Data'))
-                            <a href="{{route('backend.contract.create')}}" class="btn btn-primary m-{{$alignShortRev}}-15">
+                            <a href="{{route('backend.contract.create')}}{{request()->has('type') ? '?type='.request()->query('type') : ''}}" class="btn btn-primary m-{{$alignShortRev}}-15">
                                 <span>Add new contract</span>
                             </a>
                         @endif
