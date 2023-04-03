@@ -174,7 +174,7 @@
 												   </span>
 												   <p><b>Here are the details below</b></p>
 												   <ul>
-														<li><b>Contract#</b> {{$data['contract']->order_id}}</li>
+													<li><b>Contract# </b><a target="_blank" href="{{$data['base_url'].'/backend/contract/'.$data['contract']->order_id}}">{{$data['base_url'].'/backend/contract/'.$data['contract']->order_id}}</a></li>
 														<li><b>Type</b>- {{$data['contract']->user_type}}</li>
 													   <li><b>{{\Str::ucFirst($data['contract']->user_type)}}</b>- {{$data['contract']->user->name ?? ''}}</li>
 													   <li><b>{{$data['contract']->user_type == 'vendor' ? 'Purchaser' : 'Salesperson'}} </b>- {{$data['contract']->association->name  ?? ''}}</li>

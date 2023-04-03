@@ -128,45 +128,24 @@
 </head>
 
 <body class="clean-body" style="margin: 0; padding: 0; -webkit-text-size-adjust: 100%; background-color: #f2f2f2;">
-	<!--[if IE]><div class="ie-browser"><![endif]-->
 	<table class="nl-container" style="table-layout: fixed; vertical-align: top; min-width: 320px; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f2f2f2; width: 100%;" cellpadding="0" cellspacing="0" role="presentation" width="100%" bgcolor="#f2f2f2" valign="top">
 		<tbody>
 			<tr style="vertical-align: top;" valign="top">
 				<td style="word-break: break-word; vertical-align: top;" valign="top">
-					<!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color:#f2f2f2"><![endif]-->
-				 	
-				 	
-					
 					<div style="background-color:transparent;">
 						<div class="block-grid " style="min-width: 320px; max-width: 600px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; Margin: 0 auto; background-color: #ffffff;">
 							<div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;">
-								<!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px"><tr class="layout-full-width" style="background-color:#ffffff"><![endif]-->
-								<!--[if (mso)|(IE)]><td align="center" width="600" style="background-color:#ffffff;width:600px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 15px; padding-left: 15px; padding-top:15px; padding-bottom:15px;"><![endif]-->
-
-
-
 								<div class="col num12" style="min-width: 320px; max-width: 600px; display: table-cell; vertical-align: top; width: 600px;">
 									<div class="col_cont" style="width:100% !important;">
-										<!--[if (!mso)&(!IE)]><!-->
 										<div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:15px; padding-bottom:15px; padding-right: 15px; padding-left: 15px;">
-											<!--<![endif]-->
-											<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 25px; padding-left: 25px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
 											<div style="color:#000000;font-family:'Roboto', Tahoma, Verdana, Segoe, sans-serif;line-height:1.5;padding-top:10px;padding-right:25px;padding-bottom:10px;padding-left:25px;">
 												<div class="txtTinyMce-wrapper" style="line-height: 1.5; font-size: 16px; font-family: 'Roboto', Tahoma, Verdana, Segoe, sans-serif; color: #000000; mso-line-height-alt: 18px;">
 													<!-- <p style="line-height: 1.5; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; font-size: 16px; mso-line-height-alt: 24px; margin: 0;"><span style="font-size: 16px;">Hello name,</span></p> -->
 
 													<div class="img-container center fixedwidth" align="center" style="padding-right: 0px;padding-left: 0px;padding-top:20px">
-						                                    <!--[if mso]>
-						                                               <table width="100%" cellpadding="0" cellspacing="0" border="0">
-						                                                  <tr style="line-height:0px">
-						                                                     <td style="padding-right: 0px;padding-left: 0px;" align="center">
-						                                                        <![endif]--><a target="_blank" rel="noopener noreferrer" href="{{$data['base_url']}}" style="outline:none" tabindex="-1">{{-- <img class="center fixedwidth" align="center" border="0" src="https://frontlineticketing.com/images/flt-logo.png" alt="Trendit" title="Trendit" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 232px; display: block;" width="232"> --}}Contman</a>
-						                    		<!--[if mso]>
-						                                                     </td>
-						                                                  </tr>
-						                                    </table>
-						                           <![endif]-->
-						                    </div>
+						                                    <a target="_blank" rel="noopener noreferrer" href="{{$data['base_url']}}" style="outline:none" tabindex="-1">{{-- <img class="center fixedwidth" align="center" border="0" src="https://frontlineticketing.com/images/flt-logo.png" alt="Trendit" title="Trendit" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 232px; display: block;" width="232"> --}}Contman</a>
+						                    		
+						                    		</div>
 													 
 													<p style="line-height: 1.5; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 18px; margin: 0;"><br><span style="font-size: 16px;">
 														<h3 style="">Hello, </h3>
@@ -174,7 +153,7 @@
 												   </span>
 												   <p><b>Here are the details below</b></p>
 												   <ul>
-														<li><b>Contract#</b> {{$data['contract']->order_id}}</li>
+														<li><b>Contract# </b><a target="_blank" href="{{$data['base_url'].'/backend/contract/'.$data['contract']->order_id}}">{{$data['base_url'].'/backend/contract/'.$data['contract']->order_id}}</a></li>
 														<li><b>Type</b>- {{$data['contract']->user_type}}</li>
 													   <li><b>{{\Str::ucFirst($data['contract']->user_type)}}</b>- {{$data['contract']->user->name ?? ''}}</li>
 													   <li><b>{{$data['contract']->user_type == 'vendor' ? 'Purchaser' : 'Salesperson'}} </b>- {{$data['contract']->association->name  ?? ''}}</li>
@@ -186,55 +165,36 @@
 												</p>
 												</div>
 											</div>
-											<!--[if mso]></td></tr></table><![endif]-->
-											 
-										 
 										</div>
-										<!--<![endif]-->
 									</div>
 								</div>
-								<!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-								<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
 							</div>
 						</div>
 					</div>
 					<div style="background-color:transparent;">
 						<div class="block-grid " style="min-width: 320px; max-width: 600px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; Margin: 0 auto; background-color: #e31c79;">
 							<div style="border-collapse: collapse;display: table;width: 100%;background-color:#e31c79;">
-								<!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px"><tr class="layout-full-width" style="background-color:#e31c79"><![endif]-->
-								<!--[if (mso)|(IE)]><td align="center" width="600" style="background-color:#e31c79;width:600px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:15px; padding-bottom:15px;"><![endif]-->
 								<div class="col num12" style="min-width: 320px; max-width: 600px; display: table-cell; vertical-align: top; width: 600px;">
 									<div class="col_cont" style="width:100% !important;">
-										<!--[if (!mso)&(!IE)]><!-->
 										<div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:15px; padding-bottom:15px; padding-right: 0px; padding-left: 0px;">
-											<!--<![endif]-->
-											<div class="img-container center fixedwidth" align="center" style="padding-right: 0px;padding-left: 0px;">
-												<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr style="line-height:0px"><td style="padding-right: 0px;padding-left: 0px;" align="center"><![endif]--><a href="#" target="_blank" style="outline:none" tabindex="-1"><img class="center fixedwidth" align="center" border="0" src="{{$data['base_url']}}/frontend/images/logo.png" alt="Alternate text" title="Alternate text" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 120px; display: block;" width="120"></a>
-												<!--[if mso]></td></tr></table><![endif]-->
-											</div>
-											
+											{{-- <div class="img-container center fixedwidth" align="center" style="padding-right: 0px;padding-left: 0px;">
+												<a href="#" target="_blank" style="outline:none" tabindex="-1"><img class="center fixedwidth" align="center" border="0" src="{{$data['base_url']}}/frontend/images/logo.png" alt="Alternate text" title="Alternate text" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 120px; display: block;" width="120"></a>
+											</div> --}}
 											<div style="color:#ffffff;font-family:Roboto, Tahoma, Verdana, Segoe, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
 												<div class="txtTinyMce-wrapper" style="line-height: 1.2; font-size: 12px; color: #ffffff; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 14px;">
 													<p style="font-size: 14px; line-height: 1.2; word-break: break-word; text-align: center; mso-line-height-alt: 17px; margin: 0;"><span style="font-size: 14px;">Contman © 2023. All rights reserved</span></p>
 												</div>
 											</div>
-											<!--[if mso]></td></tr></table><![endif]-->
-											<!--[if (!mso)&(!IE)]><!-->
 										</div>
-										<!--<![endif]-->
 									</div>
 								</div>
-								<!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-								<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->
 							</div>
 						</div>
 					</div>
-					<!--[if (mso)|(IE)]></td></tr></table><![endif]-->
 				</td>
 			</tr>
 		</tbody>
 	</table>
-	<!--[if (IE)]></div><![endif]-->
 </body>
 
 </html>

@@ -47,9 +47,9 @@ class ContractRenewJob implements ShouldQueue
 
                 $new_contract->order_id = uniqid();
                 $new_contract->start_date = $contract->getAttributes()['end_date'];
-                $new_contract->end_date = \Carbon\Carbon::parse($contract->end_date)->addDays(\Carbon\Carbon::parse($contract->start_date)->diffInDays($contract->end_date));
+                $new_contract->end_date = \Carbon\Carbon::parse($contract->end_date)->addDays(\Carbon\Carbon::parse($contract->start_date)->diffInDays($contract->end_date))->format('d-m-Y');
                 $new_contract->renewal_date =  $new_contract->getAttributes()['end_date'];
-                $new_contract->renewal_reminder_date = \Carbon\Carbon::parse($new_contract->end_date)->subDays(\Carbon\Carbon::parse($contract->end_date)->diffInDays($contract->renewal_reminder_date));
+                $new_contract->renewal_reminder_date = \Carbon\Carbon::parse($new_contract->end_date)->subDays(\Carbon\Carbon::parse($contract->end_date)->diffInDays($contract->renewal_reminder_date))->format('d-m-Y');
                 $new_contract->status = null;
                 $new_contract->renew_from =$contract->id;
                 $new_contract->save();
@@ -91,7 +91,7 @@ class ContractRenewJob implements ShouldQueue
                 try {
                     $email = new ContractRenewalReminder($data);
                     Mail::to($contract->emp->email)->send($email);
-                } catch (\Throwable $th) {
+                } catch (\Exception $e) {
                     
                 }
             }

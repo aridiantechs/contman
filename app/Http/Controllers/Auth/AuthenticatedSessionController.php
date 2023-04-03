@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         if (Auth::check() && \Auth::user()->hasRole('superadmin|employee')) {
-            return redirect()->route('backend.dashboard');
+            return redirect()->to(session('url.intended'));
         }elseif(Auth::check() && auth()->user()->hasRole('endUser')) {
             /* return redirect()->route('enduser.profile.index'); */
             return redirect()->to(session('url.intended'));
