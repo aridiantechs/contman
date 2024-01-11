@@ -6,7 +6,8 @@
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
         width: inherit">
-            <h1 class="logo-unfold"><span class="text-color1">Cont</span><span class="text-color2"> Man</span></h1>
+            {{-- <h1 class="logo-unfold"><span class="text-color1">Cont</span><span class="text-color2"> Man</span></h1> --}}
+            <img src="{{asset('backend/assets/images/contman-logo.jpg')}}" alt="Logo">
             <h1 class="logo-fold"><span class="text-color1">C</span><span class="text-color2"> M</span></h1>
         </a>
     </div>
