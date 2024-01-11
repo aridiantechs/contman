@@ -3,7 +3,7 @@
 <title>Contman - Admin Dashboard </title>
 
 <!-- Favicon -->
-<link rel="shortcut icon" href="{{asset('backend/assets/images/favicon.ico')}}">
+<link rel="shortcut icon" href="{{asset('backend/assets/images/contman-favicon.jpg')}}">
 
 <!-- page css -->
 <link href="{{asset('backend/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet">

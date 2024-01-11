@@ -7,7 +7,7 @@
     <title>Contman - Login </title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{asset('backend/assets/images/favicon.ico')}}">
+    <link rel="shortcut icon" href="{{asset('backend/assets/images/contman-favicon.jpg')}}">
 
     <!-- page css -->
 
@@ -51,8 +51,9 @@
                         <div class="col-md-7 col-lg-5 m-h-auto">
                             <div class="card {{-- shadow-lg --}}">
                                 <div class="card-body">
-                                    <div class="d-flex text-center justify-content-between m-b-30">
-                                        <h1 class="m-b-0 w-100"><span class="text-color1">Cont</span><span class="text-color2"> Man</span></h1>
+                                    <div class="d-flex text-center justify-content-center m-b-30">
+                                        <img class="img-fluid" alt="" width="300" src="{{asset('backend/assets/images/contman-logo.jpg')}}">
+                                        {{-- <h1 class="m-b-0 w-100"><span class="text-color1">Cont</span><span class="text-color2"> Man</span></h1> --}}
                                         {{-- <h2 class="m-b-0 text-color2">Sign In</h2> --}}
                                     </div>
                                     
